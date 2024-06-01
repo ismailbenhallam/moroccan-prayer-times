@@ -8,7 +8,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="moroccan_prayer_times",
-    version="0.0.9",
+    version="0.0.10",
     author="Ismail BENHALLAM",
     author_email="ismailben44@gmail.com",
     packages=find_packages(),

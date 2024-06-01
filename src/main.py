@@ -42,7 +42,10 @@ def locale():
     return config.get(SECTION_NAME, "locale", fallback=DEFAULT_LOCALE)
 
 
-i18n = PyI18n(available_locales=("ar", "en", "fr"), load_path="src/translations/")
+# Needed for PyI18n
+os.chdir(Path(os.path.realpath(__file__)).parent)
+
+i18n = PyI18n(available_locales=("ar", "en", "fr"), load_path="translations/")
 _: Callable = i18n.gettext
 
 app = typer.Typer(help=APP_NAME, add_help_option=False, add_completion=False)
@@ -334,7 +337,7 @@ def next_prayer_time():
                 next_prayer_index = index
                 break
             elif prayer_hour > current_hour or (
-                prayer_hour == current_hour and prayer_minute > current_minute
+                    prayer_hour == current_hour and prayer_minute > current_minute
             ):
                 next_prayer_time_string = f"{prayer_hour:02}:{prayer_minute:02}"
                 next_prayer_index = index
