@@ -8,10 +8,14 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="moroccan_prayer_times",
-    version="0.0.10",
+    version="0.0.14",
     author="Ismail BENHALLAM",
     author_email="ismailben44@gmail.com",
     packages=find_packages(),
+    include_package_data=True,
+    package_data={
+        "moroccan_prayer_times": ["translations/*.yml"],
+    },
     install_requires=requirements,
     description="Moroccan Prayer Times CLI",
     long_description=long_description,
@@ -20,7 +24,7 @@ setup(
     url="https://github.com/ismailbenhallam/prayer-times-cli/",
     entry_points={
         "console_scripts": [
-            "prayertime=src.main:main",
+            "prayertime=moroccan_prayer_times.main:main",
         ],
     },
     classifiers=[
