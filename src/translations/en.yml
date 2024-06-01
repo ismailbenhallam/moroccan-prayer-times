@@ -1,0 +1,33 @@
+en:
+  prayers_by_index:
+    _0: Al-Fajr
+    _1: Sunrise
+    _2: Al-Dhuhr
+    _3: Al-Asr
+    _4: Al-Maghrib
+    _5: Al-Ishaa
+  info:
+    language_saved_is: Language currently used is "{language}"
+    city_saved_is: City currently used is "{city}"
+  success:
+    city_saved: City saved
+    config_saved: Your preferences are saved
+    next_prayer_in: "{prayer} in {minutes}"
+    next_prayer_now: "{prayer} now!"
+  prompts:
+    choose_city_now_and_reuse_it: Would you like to choose your city and save it for further usage ?
+    choose_city: Please choose a city
+    choose_locale: Please choose your language
+    want_to_change_this_param: Would you like to change this option?
+  commands_help:
+    default_command_note: '[magenta]Note:[/magenta] Default command will be executed, which is "next". Use "help" to see the full usage.'
+    config: Show my config
+    setup: Change your preferences
+    today: Display today's prayer times
+    next: Display the time remaining until the next prayer
+    help: Show this message and exit
+  warnings:
+    city_not_saved: City information not found!
+  errors:
+    retrieving_data_failed: Failed to retrieve data.
+    loading_cities_failed: Error while trying to load cities. Please retry later

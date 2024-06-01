@@ -1,0 +1,35 @@
+ar:
+  prayers_by_index:
+    _0: الفجر
+    _1: الشروق
+    _2: الظهر
+    _3: العصر
+    _4: المغرب
+    _5: العشاء
+  info:
+    language_saved_is: اللغة المستخدمة حالياً "{language}"
+    city_saved_is: المدينة المستخدمة حاليا [green]{city}[/green]ً
+  success:
+    city_saved: تم حفظ المدينة
+    config_saved: تم حفظ خياراتك
+    next_prayer_in: "{prayer} بعد {minutes}"
+    next_prayer_now: "!{prayer} الآن"
+  prompts:
+    choose_city_now_and_reuse_it: هل ترغب في اختيار مدينتك وحفظها لاستخدامها مرة أخرى؟
+    choose_city: يرجى اختيار المدينة
+    choose_locale: يرجى اختيار اللغة
+    want_to_change_this_param: هل تريد تغيير هذا الإعداد؟
+  commands_help:
+    default_command_note: ' "next" [magenta]ملحوظة:[/magenta] سيتم تنفيذ الأمر التلقائي 
+
+       لمعرفة الاستخدام الكامل "help"'
+    config: عرض الإعدادات الخاصة بي
+    setup: تغيير الإعدادات
+    today: عرض أوقات الصلاة اليوم
+    next: عرض الوقت المتبقي حتى موعد الصلاة التالية
+    help: عرض هذا النص والخروج
+  warnings:
+    city_not_saved: معلومات المدينة غير موجودة!
+  errors:
+    retrieving_data_failed: فشل في الحصول على البيانات.
+    loading_cities_failed: خطأ أثناء محاولة تحميل المدن. الرجاء إعادة المحاولة لاحقاً
