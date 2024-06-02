@@ -51,7 +51,15 @@ This will display the list of available commands and their descriptions.
 The first time you run the application, it will prompt you to select a city (**english** is the default language). These
 settings will be saved for future use.
 
-You can change the city or the language anytime using the `setup` command.
+You can change the _**city**_ or the **_language_** anytime using the `setup` command.
+
+> **NOTE:** If you choose to use the Arabic language option with this package, make sure to check the following:
+>
+> 1. **Terminal Encoding**: Ensure that your terminal is configured to use UTF-8 or another encoding that supports
+     Arabic characters. In some terminals or IDEs (like PyCharm), you may need to set the encoding explicitly.
+>
+> 2. **Font Support**: Verify that your system has fonts installed that support the display of Arabic characters.
+     Without proper font support, Arabic text may not render correctly.
 
 ## Contributing
 
