@@ -12,7 +12,9 @@ en:
   success:
     city_saved: City saved
     config_saved: Your preferences are saved
-    next_prayer_in: "{prayer} in {minutes}"
+    next_prayer_in: "{prayer} in {hours} hour(s) and {minutes} minute(s)"
+    next_prayer_in_hours: "{prayer} in {hours} hour(s)"
+    next_prayer_in_minutes: "{prayer} in {minutes} minute(s)"
     next_prayer_now: "{prayer} now!"
   prompts:
     choose_city_now_and_reuse_it: Would you like to choose your city and save it for further usage ?

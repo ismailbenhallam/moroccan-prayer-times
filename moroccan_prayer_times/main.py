@@ -6,7 +6,6 @@ import json
 import os
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Callable, Any
 
 import requests
 import typer
@@ -127,7 +126,7 @@ class Habous_api:
     @staticmethod
     def get_cities() -> dict[int, str] | None:
         """Get the cities list"""
-        url = f"https://habous.gov.ma/prieres/index.php"
+        url = "https://habous.gov.ma/prieres/index.php"
 
         response = requests.get(url, verify=False)
 
@@ -232,11 +231,10 @@ def _city_from_cache_or_prompt_then_save() -> dict[str, str]:
 )
 def get_config():
     """Show the user config"""
-    city_id = config.get(SECTION_NAME, "city_id", fallback=None)
     city_name = config.get(SECTION_NAME, "city_name", fallback=None)
     locale = config.get(SECTION_NAME, "locale", fallback=None)
     print(
-        f"""city_id={city_id}\ncity_name= {city_name}\nlocale= {locale}
+        f"""city_name= {city_name}\nlocale= {locale}
     """
     )
 
@@ -340,7 +338,7 @@ def next_prayer_time():
                 next_prayer_index = index
                 break
             elif prayer_hour > current_hour or (
-                prayer_hour == current_hour and prayer_minute > current_minute
+                    prayer_hour == current_hour and prayer_minute > current_minute
             ):
                 next_prayer_time_string = f"{prayer_hour:02}:{prayer_minute:02}"
                 next_prayer_index = index
@@ -366,14 +364,21 @@ def next_prayer_time():
             time_until_next_prayer = next_prayer_time - datetime.strptime(
                 f"{current_hour:02}:{current_minute:02}", "%H:%M"
             )
+            prayer = _(f"prayers_by_index._{next_prayer_index}")
             hours = time_until_next_prayer.seconds // 3600
             minutes = (time_until_next_prayer.seconds // 60) % 60
-            remaining_to_display = f"{hours:02d}:{minutes:02d}"
+            if hours == 0:
+                path = "success.next_prayer_in_minutes"
+            elif minutes == 0:
+                path = "success.next_prayer_in_hours"
+            else:
+                path = "success.next_prayer_in"
             print(
                 _(
-                    "success.next_prayer_in",
-                    prayer=_(f"prayers_by_index._{next_prayer_index}"),
-                    minutes=remaining_to_display,
+                    path,
+                    prayer=prayer,
+                    hours=hours,
+                    minutes=minutes,
                 )
             )
     else:
@@ -392,8 +397,9 @@ def help(ctx: typer.Context):
 
 @app.callback(invoke_without_command=True)
 def default(ctx: typer.Context):
-    f"""Create the config file with the default language as {DEFAULT_LOCALE}"""
+    """Default command is 'next'"""
 
+    f"""Create the config file with the default language as {DEFAULT_LOCALE}"""
     if config.get(SECTION_NAME, "locale", fallback=None) is None:
         config.set(SECTION_NAME, "locale", DEFAULT_LOCALE)
         _flush()

@@ -12,7 +12,9 @@ ar:
   success:
     city_saved: تم حفظ المدينة
     config_saved: تم حفظ خياراتك
-    next_prayer_in: "{prayer} بعد {minutes}"
+    next_prayer_in: "{prayer} بعد {hours} ساعات و {minutes} دقيقة"
+    next_prayer_in_hours: "{prayer} بعد {hours} ساعات"
+    next_prayer_in_minutes: "{prayer} بعد {minutes} دقيقة"
     next_prayer_now: "!{prayer} الآن"
   prompts:
     choose_city_now_and_reuse_it: هل ترغب في اختيار مدينتك وحفظها لاستخدامها مرة أخرى؟

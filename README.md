@@ -22,7 +22,20 @@ website (https://habous.gov.ma/).
 
 ## Installation
 
-You can install the package from PyPI using pip:
+You can install the package using either `pipx` or `pip`.
+
+> **Note**: It is highly recommended to install this package using [pipx](https://pipx.pypa.io/stable/). It provides
+> an isolated environment for installing and managing command-line tools. It also simplifies running CLIs without
+> activating a virtual environment.  
+> [Check out this page](https://pipx.pypa.io/stable/comparisons/) to compare **pip** and **pipx**.
+
+### Using pipx
+
+```shell
+pipx install moroccan-prayer-times
+```
+
+### Using pip
 
 ```shell
 pip install moroccan-prayer-times
@@ -30,7 +43,7 @@ pip install moroccan-prayer-times
 
 ## Usage
 
-After installation, you can run the CLI application with the following commands:
+After the installation, you can run the CLI application with the following command:
 
 ```shell
 prayertime help
@@ -40,11 +53,13 @@ This will display the list of available commands and their descriptions.
 
 ### Commands
 
-- `prayertime today`: Display today's prayer times for the configured city.
 - `prayertime next`: Show the time remaining until the next prayer.
+- `prayertime today`: Display today's prayer times for the configured city.
 - `prayertime config`: Display the current configuration (city and language).
 - `prayertime setup`: Configure the preferred city and language.
 - `prayertime help`: Show the help message.
+
+> Note: the default command is `next`.
 
 ## Configuration
 
@@ -68,16 +83,10 @@ pull request on the [GitHub repository](https://github.com/ismailbenhallam/praye
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under
+the [MIT License](https://github.com/ismailbenhallam/prayer-times-cli/?tab=MIT-1-ov-file).
 
-## Acknowledgments
+## Contact
 
-This application utilizes the following third-party libraries:
-
-- [Typer](https://typer.tiangolo.com/) for building the CLI
-- [Requests](https://requests.readthedocs.io/) for making HTTP requests
-- [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/) for parsing HTML
-- [PyInquirer](https://github.com/CITGuru/PyInquirer) for interactive command-line user prompts
-- [Rich](https://github.com/willmcgugan/rich) for styled console output
-- [BeautifulTable](https://github.com/pri22296/beautifultable) for rendering tables in the console
-
+If you have any questions or suggestions, feel free to contact me
+at [ismailben44@gmail.com](mailto:ismailben44@gmail.com).
