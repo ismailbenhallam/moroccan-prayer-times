@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import collections.abc
 import configparser
 import json
@@ -46,7 +48,12 @@ def locale():
 os.chdir(Path(os.path.realpath(__file__)).parent)
 
 i18n = PyI18n(available_locales=("ar", "en", "fr"), load_path="translations/")
-_: Callable = i18n.gettext
+
+
+def _(path: str, **kwargs):
+    chosen_locale = locale()
+    return i18n.gettext(chosen_locale, path, **kwargs)
+
 
 app = typer.Typer(help=APP_NAME, add_help_option=False, add_completion=False)
 
@@ -115,7 +122,7 @@ class Habous_api:
 
             return prayer_times
         else:
-            print(_(locale(), "errors.retrieving_data_failed"))
+            print(_("errors.retrieving_data_failed"))
 
     @staticmethod
     def get_cities() -> dict[int, str] | None:
@@ -150,7 +157,7 @@ def _prompt_user_for_city(city_options: dict[int, str] | None) -> tuple[int, str
     """Prompt the user to choose a city"""
     if city_options is None:
         print(
-            f"[bold dark_orange]{_(locale(), 'errors.loading_cities_failed')}[/bold dark_orange]"
+            f"[bold dark_orange]{_('errors.loading_cities_failed')}[/bold dark_orange]"
         )
         raise typer.Exit(code=1)
 
@@ -160,7 +167,7 @@ def _prompt_user_for_city(city_options: dict[int, str] | None) -> tuple[int, str
             {
                 "type": "list",
                 "name": "city_name",
-                "message": _(locale(), "prompts.choose_city"),
+                "message": _("prompts.choose_city"),
                 "choices": city_options.values(),
             }
         ]
@@ -179,7 +186,7 @@ def _prompt_user_for_locale():
             {
                 "type": "list",
                 "name": "language",
-                "message": _(locale(), "prompts.choose_locale"),
+                "message": _("prompts.choose_locale"),
                 "choices": i18n.available_locales,
             }
         ]
@@ -193,10 +200,8 @@ def _city_from_cache_or_prompt_then_save() -> dict[str, str]:
     city_id = config.get(SECTION_NAME, "city_id", fallback=None)
     city_name = config.get(SECTION_NAME, "city_name", fallback=None)
     if city_id is None or city_name is None:
-        print(
-            f"[bold dark_orange]{_(locale(), 'warnings.city_not_saved')}[/bold dark_orange]"
-        )
-        answer = Confirm.ask(_(locale(), "prompts.choose_city_now_and_reuse_it"))
+        print(f"[bold dark_orange]{_('warnings.city_not_saved')}[/bold dark_orange]")
+        answer = Confirm.ask(_("prompts.choose_city_now_and_reuse_it"))
         if answer:
             city = _prompt_user_for_city(Habous_api.get_cities())
             if city is not None:
@@ -204,7 +209,7 @@ def _city_from_cache_or_prompt_then_save() -> dict[str, str]:
                 config.set(SECTION_NAME, "city_id", str(city_id))
                 config.set(SECTION_NAME, "city_name", city_name)
                 _flush()
-                print(_(locale(), "success.city_saved"))
+                print(_("success.city_saved"))
                 return {"city_id": int(city_id), "city_name": city_name}
 
             # Canceled
@@ -222,8 +227,8 @@ def _city_from_cache_or_prompt_then_save() -> dict[str, str]:
 
 @app.command(
     name="config",
-    short_help=_(locale(), "commands_help.config"),
-    help=_(locale(), "commands_help.config"),
+    short_help=_("commands_help.config"),
+    help=_("commands_help.config"),
 )
 def get_config():
     """Show the user config"""
@@ -238,18 +243,19 @@ def get_config():
 
 @app.command(
     name="setup",
-    short_help=_(locale(), "commands_help.setup"),
-    help=_(locale(), "commands_help.setup"),
+    short_help=_("commands_help.setup"),
+    help=_("commands_help.setup"),
 )
 def setup():
     """Change the user preferences"""
     try:
+        # Always existing, because we set it as {DEFAULT_LOCALE} iat the program launch (if it's not found in the config file)
         saved_locale = config.get(SECTION_NAME, "locale", fallback=None)
         something_changed = False
 
-        print(_(saved_locale, "info.language_saved_is", language=saved_locale))
+        print(_("info.language_saved_is", language=saved_locale))
 
-        answer = Confirm.ask(_(locale(), "prompts.want_to_change_this_param"))
+        answer = Confirm.ask(_("prompts.want_to_change_this_param"))
         # User wants to save locale
         if answer:
             answers = PyInquirer.prompt(
@@ -257,24 +263,21 @@ def setup():
                     {
                         "type": "list",
                         "name": "language",
-                        "message": _(saved_locale, "prompts.choose_locale"),
+                        "message": _("prompts.choose_locale"),
                         "choices": i18n.available_locales,
                     }
                 ]
             )
             chosen_locale = answers["language"]
             config.set(SECTION_NAME, "locale", chosen_locale)
-            saved_locale = chosen_locale
             something_changed = True
 
         print()
         want_to_change_city = None
         saved_city_name = config.get(SECTION_NAME, "city_name", fallback=None)
         if saved_city_name is not None:
-            print(_(saved_locale, "info.city_saved_is", city=saved_city_name))
-            want_to_change_city = Confirm.ask(
-                _(saved_locale, "prompts.want_to_change_this_param")
-            )
+            print(_("info.city_saved_is", city=saved_city_name))
+            want_to_change_city = Confirm.ask(_("prompts.want_to_change_this_param"))
 
         if saved_city_name is None or want_to_change_city is True:
             city_id, city_name = _prompt_user_for_city(Habous_api.get_cities())
@@ -285,15 +288,15 @@ def setup():
         if something_changed:
             _flush()
             print()
-            print(_(saved_locale, "success.config_saved"))
+            print(_("success.config_saved"))
     except Exception:
         raise
 
 
 @app.command(
     name="today",
-    short_help=_(locale(), "commands_help.today"),
-    help=_(locale(), "commands_help.today"),
+    short_help=_("commands_help.today"),
+    help=_("commands_help.today"),
 )
 def today_prayer_times():
     """Display today's prayer times"""
@@ -304,18 +307,18 @@ def today_prayer_times():
             table = BeautifulTable()
             table.set_style(Style.STYLE_BOX_ROUNDED)
             for index, time in enumerate(prayer_times.values()):
-                table.rows.append([time, _(locale(), f"prayers_by_index._{index}")])
+                table.rows.append([time, _(f"prayers_by_index._{index}")])
             print(table)
         else:
-            print(_(locale(), "errors.retrieving_data_failed"))
+            print(_("errors.retrieving_data_failed"))
     except Exception:
         pass
 
 
 @app.command(
     name="next",
-    short_help=_(locale(), "commands_help.next"),
-    help=_(locale(), "commands_help.next"),
+    short_help=_("commands_help.next"),
+    help=_("commands_help.next"),
 )
 def next_prayer_time():
     """Display the time remaining until the next prayer"""
@@ -344,11 +347,9 @@ def next_prayer_time():
                 break
 
         if is_now:
-            prayer_name_in_locale = _(
-                locale(), f"prayers_by_index._{next_prayer_index}"
-            )
+            prayer_name_in_locale = _(f"prayers_by_index._{next_prayer_index}")
             print(
-                f'[dark_orange bold]{_(locale(), "success.next_prayer_now", prayer=prayer_name_in_locale)}[/dark_orange bold]'
+                f'[dark_orange bold]{_("success.next_prayer_now", prayer=prayer_name_in_locale)}[/dark_orange bold]'
             )
         else:
             is_tomorrow = False
@@ -370,20 +371,19 @@ def next_prayer_time():
             remaining_to_display = f"{hours:02d}:{minutes:02d}"
             print(
                 _(
-                    locale(),
                     "success.next_prayer_in",
-                    prayer=_(locale(), f"prayers_by_index._{next_prayer_index}"),
+                    prayer=_(f"prayers_by_index._{next_prayer_index}"),
                     minutes=remaining_to_display,
                 )
             )
     else:
-        print(_(locale(), "errors.retrieving_data_failed"))
+        print(_("errors.retrieving_data_failed"))
 
 
 @app.command(
     name="help",
     help="Show this message and exit.",
-    short_help=_(locale(), "commands_help.help"),
+    short_help=_("commands_help.help"),
 )
 def help(ctx: typer.Context):
     """Show the help message"""
@@ -401,7 +401,7 @@ def default(ctx: typer.Context):
     if ctx.invoked_subcommand is not None:
         return
     else:
-        print(f'[bold]{_(locale(), "commands_help.default_command_note")}\n[/bold]')
+        print(f'[bold]{_("commands_help.default_command_note")}\n[/bold]')
         next_prayer_time()
 
 
