@@ -1,5 +1,13 @@
 # Moroccan Prayer Times CLI
 
+<!-- [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) -->
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/moroccan-prayer-times?style=flat-square)
+![PyPI - Version](https://img.shields.io/pypi/v/moroccan-prayer-times?style=flat-square)
+![GitHub License](https://img.shields.io/github/license/ismailbenhallam/prayer-times-cli?style=flat-square)
+
+<!-- ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/ismailbenhallam/prayer-times-cli)
+![GitHub Repo stars](https://img.shields.io/github/stars/ismailbenhallam/prayer-times-cli?)-->
+
 A command-line interface (CLI) application to fetch and display Moroccan prayer times for the current day or the next
 prayer time remaining, using data provided by the official Moroccan Ministry of Habous and Islamic Affairs
 website (https://habous.gov.ma/).
@@ -25,18 +33,18 @@ pip install moroccan-prayer-times
 After installation, you can run the CLI application with the following commands:
 
 ```shell
-prayer-times help
+prayertime help
 ```
 
 This will display the list of available commands and their descriptions.
 
 ### Commands
 
-- `prayer-times today`: Display today's prayer times for the configured city.
-- `prayer-times next`: Show the time remaining until the next prayer.
-- `prayer-times config`: Display the current configuration (city and language).
-- `prayer-times setup`: Configure the preferred city and language.
-- `prayer-times help`: Show the help message.
+- `prayertime today`: Display today's prayer times for the configured city.
+- `prayertime next`: Show the time remaining until the next prayer.
+- `prayertime config`: Display the current configuration (city and language).
+- `prayertime setup`: Configure the preferred city and language.
+- `prayertime help`: Show the help message.
 
 ## Configuration
 
