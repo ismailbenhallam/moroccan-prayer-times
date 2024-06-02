@@ -1,9 +1,9 @@
 # Moroccan Prayer Times CLI
 
 <!-- [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) -->
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/moroccan-prayer-times?style=flat-square)
-![PyPI - Version](https://img.shields.io/pypi/v/moroccan-prayer-times?style=flat-square)
-![GitHub License](https://img.shields.io/github/license/ismailbenhallam/prayer-times-cli?style=flat-square)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/moroccan-prayer-times?style=for-the-badge)
+![PyPI - Version](https://img.shields.io/pypi/v/moroccan-prayer-times?style=for-the-badge)
+![GitHub License](https://img.shields.io/github/license/ismailbenhallam/prayer-times-cli?style=for-the-badge)
 
 <!-- ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/ismailbenhallam/prayer-times-cli)
 ![GitHub Repo stars](https://img.shields.io/github/stars/ismailbenhallam/prayer-times-cli?)-->
