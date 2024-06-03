@@ -9,15 +9,15 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/ismailbenhallam/prayer-times-cli?)-->
 
 A command-line interface (CLI) application to fetch and display Moroccan prayer times for the current day or the next
-prayer time remaining, using data provided by the official Moroccan Ministry of Habous and Islamic Affairs
-website (https://habous.gov.ma/).
+prayer time remaining, using data provided by the official [Moroccan Ministry of Habous and Islamic Affairs
+website](https://habous.gov.ma/).
 
 ## Features
 
 - Display today's prayer times for a selected Moroccan city
 - Show the time remaining until the next prayer
 - Configure the preferred city and language
-- Caching of fetched prayer times for better performance
+- Caching the fetched prayer times for better performance
 - Localization support for Arabic, English, and French languages
 
 ## Installation
@@ -53,7 +53,7 @@ This will display the list of available commands and their descriptions.
 
 ### Commands
 
-- `prayertime next`: Show the time remaining until the next prayer.
+- `prayertime next`: Show the remaining time until the next prayer.
 - `prayertime today`: Display today's prayer times for the configured city.
 - `prayertime config`: Display the current configuration (city and language).
 - `prayertime setup`: Configure the preferred city and language.

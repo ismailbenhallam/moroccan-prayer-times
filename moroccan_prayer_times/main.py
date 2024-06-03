@@ -7,6 +7,7 @@ import os
 from datetime import datetime, timedelta
 from pathlib import Path
 
+import click
 import requests
 import typer
 import urllib3
@@ -33,6 +34,7 @@ CONFIG_FILE = Path(typer.get_app_dir(APP_FOLDER)) / CACHE_FILE_NAME
 TIMES_CACHE_FOLDER = Path(typer.get_app_dir(APP_FOLDER)) / "times"
 SECTION_NAME = "DEFAULT"
 DEFAULT_LOCALE = "en"
+GLOBAL_COMMAND = "prayertime"
 
 config = configparser.ConfigParser()
 config.read(CONFIG_FILE, encoding="utf-8")
@@ -397,13 +399,20 @@ def help(ctx: typer.Context):
 
 @app.callback(invoke_without_command=True)
 def default(ctx: typer.Context):
-    """Default command is 'next'"""
-
     f"""Create the config file with the default language as {DEFAULT_LOCALE}"""
     if config.get(SECTION_NAME, "locale", fallback=None) is None:
         config.set(SECTION_NAME, "locale", DEFAULT_LOCALE)
         _flush()
 
+    ctx.help_option_names = []  # Hide default help option
+
+    class CustomHelp(click.HelpFormatter):
+        def write_usage(self, prog: str, args: str = "", prefix=None):
+            self.buffer.append(f"Usage: {GLOBAL_COMMAND} COMMAND")
+
+    ctx.formatter_class = CustomHelp
+
+    """Default command is 'next'"""
     if ctx.invoked_subcommand is not None:
         return
     else:

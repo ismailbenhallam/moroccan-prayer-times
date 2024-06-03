@@ -1,8 +1,11 @@
 name: Publish Python package to PyPI
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - main
+    tags:
+      - 'V.*'
 
 permissions:
   contents: read
