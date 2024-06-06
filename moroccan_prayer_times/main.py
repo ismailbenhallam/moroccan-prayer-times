@@ -162,6 +162,10 @@ def _prompt_user_for_city(city_options: dict[int, str] | None) -> tuple[int, str
         )
         raise typer.Exit(code=1)
 
+    # Translate this list
+    for (id, city) in city_options.items():
+        city_options[id] = _(f"cities._{id}")
+
     # Prompt the user to choose a city
     answers = PyInquirer.prompt(
         [
@@ -271,6 +275,11 @@ def setup():
             chosen_locale = answers["language"]
             config.set(SECTION_NAME, "locale", chosen_locale)
             something_changed = True
+
+            # Translate the saved city name
+            current_city_id = config.get(SECTION_NAME, "city_id", fallback=None)
+            if current_city_id is not None:
+                config.set(SECTION_NAME, "city_name", _(f"cities._{current_city_id}"))
 
         print()
         want_to_change_city = None
