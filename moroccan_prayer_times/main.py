@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import collections.abc
 import configparser
 import json
 import os
@@ -16,15 +15,7 @@ from bs4 import BeautifulSoup
 from pyi18n import PyI18n
 from rich import print
 from rich.prompt import Confirm
-
-# 👇️ Add attributes to `collections` module
-# Before importing PyInquirer package
-collections.Mapping = collections.abc.Mapping
-collections.MutableMapping = collections.abc.MutableMapping
-collections.Iterable = collections.abc.Iterable
-collections.MutableSet = collections.abc.MutableSet
-collections.Callable = collections.abc.Callable
-import PyInquirer
+from InquirerPy import inquirer
 
 # Constants
 APP_NAME = "Prayer Times CLI"
@@ -163,26 +154,19 @@ def _prompt_user_for_city(city_options: dict[int, str] | None) -> tuple[int, str
         raise typer.Exit(code=1)
 
     # Translate this list
-    for (id, city) in city_options.items():
+    for id, city in city_options.items():
         city_options[id] = _(f"cities._{id}")
 
     # Prompt the user to choose a city
-    answers = PyInquirer.prompt(
-        [
-            {
-                "type": "list",
-                "name": "city_name",
-                "message": _("prompts.choose_city"),
-                "choices": city_options.values(),
-            }
-        ]
-    )
-
-    # User aborted
-    if "city_name" not in answers:
+    try:
+        city_name = inquirer.fuzzy(
+            message=_("prompts.choose_city"),
+            choices=city_options.values(),
+            validate=lambda result: result in city_options.values(),
+            raise_keyboard_interrupt=True,
+        ).execute()
+    except KeyboardInterrupt:
         raise typer.Abort()
-
-    city_name = answers["city_name"]
 
     for city_id in city_options:
         if city_options[city_id] == city_name:
@@ -191,23 +175,16 @@ def _prompt_user_for_city(city_options: dict[int, str] | None) -> tuple[int, str
 
 def _prompt_user_for_locale():
     """Prompt the user to choose a locale from available locales"""
-    answers = PyInquirer.prompt(
-        [
-            {
-                "type": "list",
-                "name": "language",
-                "message": _("prompts.choose_locale"),
-                "choices": i18n.available_locales,
-            }
-        ]
-    )
-
-    # User aborted
-    if "language" not in answers:
+    # Prompt the user to choose a city
+    try:
+        language = inquirer.rawlist(
+            message=_("prompts.choose_locale"),
+            choices=i18n.available_locales,
+            raise_keyboard_interrupt=True,
+        ).execute()
+        return language
+    except KeyboardInterrupt:
         raise typer.Abort()
-
-    language = answers["language"]
-    return language
 
 
 def _city_from_cache_or_prompt_then_save() -> dict[str, str]:
@@ -282,22 +259,8 @@ def setup():
 
         # User wants to save locale
         if answer:
-            answers = PyInquirer.prompt(
-                [
-                    {
-                        "type": "list",
-                        "name": "language",
-                        "message": _("prompts.choose_locale"),
-                        "choices": i18n.available_locales,
-                    }
-                ]
-            )
+            chosen_locale = _prompt_user_for_locale()
 
-            # User aborted
-            if "language" not in answers:
-                raise typer.Abort()
-
-            chosen_locale = answers["language"]
             config.set(SECTION_NAME, "locale", chosen_locale)
             something_changed = True
 
@@ -378,7 +341,7 @@ def next_prayer_time():
                 next_prayer_index = index
                 break
             elif prayer_hour > current_hour or (
-                    prayer_hour == current_hour and prayer_minute > current_minute
+                prayer_hour == current_hour and prayer_minute > current_minute
             ):
                 next_prayer_time_string = f"{prayer_hour:02}:{prayer_minute:02}"
                 next_prayer_index = index
