@@ -177,6 +177,11 @@ def _prompt_user_for_city(city_options: dict[int, str] | None) -> tuple[int, str
             }
         ]
     )
+
+    # User aborted
+    if "city_name" not in answers:
+        raise typer.Abort()
+
     city_name = answers["city_name"]
 
     for city_id in city_options:
@@ -196,6 +201,11 @@ def _prompt_user_for_locale():
             }
         ]
     )
+
+    # User aborted
+    if "language" not in answers:
+        raise typer.Abort()
+
     language = answers["language"]
     return language
 
@@ -207,6 +217,11 @@ def _city_from_cache_or_prompt_then_save() -> dict[str, str]:
     if city_id is None or city_name is None:
         print(f"[bold dark_orange]{_('warnings.city_not_saved')}[/bold dark_orange]")
         answer = Confirm.ask(_("prompts.choose_city_now_and_reuse_it"))
+
+        # User aborted
+        if answer is None:
+            raise typer.Abort()
+
         if answer:
             city = _prompt_user_for_city(Habous_api.get_cities())
             if city is not None:
@@ -260,6 +275,11 @@ def setup():
         print(_("info.language_saved_is", language=saved_locale))
 
         answer = Confirm.ask(_("prompts.want_to_change_this_param"))
+
+        # User aborted
+        if answer is None:
+            raise typer.Abort()
+
         # User wants to save locale
         if answer:
             answers = PyInquirer.prompt(
@@ -272,6 +292,11 @@ def setup():
                     }
                 ]
             )
+
+            # User aborted
+            if "language" not in answers:
+                raise typer.Abort()
+
             chosen_locale = answers["language"]
             config.set(SECTION_NAME, "locale", chosen_locale)
             something_changed = True
@@ -287,6 +312,10 @@ def setup():
         if saved_city_name is not None:
             print(_("info.city_saved_is", city=saved_city_name))
             want_to_change_city = Confirm.ask(_("prompts.want_to_change_this_param"))
+
+            # User aborted
+            if want_to_change_city is None:
+                raise typer.Abort()
 
         if saved_city_name is None or want_to_change_city is True:
             city_id, city_name = _prompt_user_for_city(Habous_api.get_cities())
@@ -349,7 +378,7 @@ def next_prayer_time():
                 next_prayer_index = index
                 break
             elif prayer_hour > current_hour or (
-                prayer_hour == current_hour and prayer_minute > current_minute
+                    prayer_hour == current_hour and prayer_minute > current_minute
             ):
                 next_prayer_time_string = f"{prayer_hour:02}:{prayer_minute:02}"
                 next_prayer_index = index
