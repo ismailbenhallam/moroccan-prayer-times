@@ -16,7 +16,6 @@ from pyi18n import PyI18n
 from rich import print
 from rich.console import Console
 from rich.panel import Panel
-from rich.prompt import Confirm
 from InquirerPy import inquirer
 from packaging import version
 from . import __version__
@@ -47,15 +46,14 @@ i18n = PyI18n(available_locales=("ar", "en", "fr"), load_path="translations/")
 
 
 def _(path: str, **kwargs):
-    chosen_locale = locale()
-    return i18n.gettext(chosen_locale, path, **kwargs)
+    return i18n.gettext(locale(), path, **kwargs)
 
 
 app = typer.Typer(help=APP_NAME, add_help_option=False, add_completion=False)
 
 
 def _flush():
-    """Save the current config in the dedicated file"""
+    """Save the current config in the config file"""
     os.makedirs(CONFIG_FILE.parent, exist_ok=True)
     with open(CONFIG_FILE, "w", encoding="utf-8") as file:
         return config.write(file)
@@ -162,15 +160,12 @@ def _prompt_user_for_city(city_options: dict[int, str] | None) -> tuple[int, str
         city_options[id] = _(f"cities._{id}")
 
     # Prompt the user to choose a city
-    try:
-        city_name = inquirer.fuzzy(
-            message=_("prompts.choose_city"),
-            choices=city_options.values(),
-            validate=lambda result: result in city_options.values(),
-            raise_keyboard_interrupt=True,
-        ).execute()
-    except KeyboardInterrupt:
-        raise typer.Abort()
+    city_name = inquirer.fuzzy(
+        message=_("prompts.choose_city"),
+        choices=city_options.values(),
+        validate=lambda result: result in city_options.values(),
+        qmark="",
+    ).execute()
 
     for city_id in city_options:
         if city_options[city_id] == city_name:
@@ -179,16 +174,10 @@ def _prompt_user_for_city(city_options: dict[int, str] | None) -> tuple[int, str
 
 def _prompt_user_for_locale():
     """Prompt the user to choose a locale from available locales"""
-    # Prompt the user to choose a city
-    try:
-        language = inquirer.rawlist(
-            message=_("prompts.choose_locale"),
-            choices=i18n.available_locales,
-            raise_keyboard_interrupt=True,
-        ).execute()
-        return language
-    except KeyboardInterrupt:
-        raise typer.Abort()
+    language = inquirer.rawlist(
+        message=_("prompts.choose_locale"), choices=i18n.available_locales, qmark=""
+    ).execute()
+    return language
 
 
 def _city_from_cache_or_prompt_then_save() -> dict[str, str]:
@@ -197,25 +186,19 @@ def _city_from_cache_or_prompt_then_save() -> dict[str, str]:
     city_name = config.get(SECTION_NAME, "city_name", fallback=None)
     if city_id is None or city_name is None:
         print(f"[bold dark_orange]{_('warnings.city_not_saved')}[/bold dark_orange]")
-        answer = Confirm.ask(_("prompts.choose_city_now_and_reuse_it"))
 
-        # User aborted
-        if answer is None:
-            raise typer.Abort()
+        answer = inquirer.confirm(
+            _("prompts.choose_city_now_and_reuse_it"), default=True, qmark=""
+        ).execute()
 
         if answer:
             city = _prompt_user_for_city(Habous_api.get_cities())
-            if city is not None:
-                city_id, city_name = city
-                config.set(SECTION_NAME, "city_id", str(city_id))
-                config.set(SECTION_NAME, "city_name", city_name)
-                _flush()
-                print(_("success.city_saved"))
-                return {"city_id": int(city_id), "city_name": city_name}
-
-            # Canceled
-            else:
-                raise typer.Exit(code=0)
+            city_id, city_name = city
+            config.set(SECTION_NAME, "city_id", str(city_id))
+            config.set(SECTION_NAME, "city_name", city_name)
+            _flush()
+            print(_("success.city_saved"))
+            return {"city_id": int(city_id), "city_name": city_name}
 
         # User doesn't want to provide a city
         else:
@@ -248,54 +231,47 @@ def get_config():
 )
 def setup():
     """Change the user preferences"""
-    try:
-        # Always existing, because we set it as {DEFAULT_LOCALE} iat the program launch (if it's not found in the config file)
-        saved_locale = config.get(SECTION_NAME, "locale", fallback=None)
-        something_changed = False
+    # Always existing, because we set it as {DEFAULT_LOCALE} iat the program launch (if it's not found in the config file)
+    saved_locale = config.get(SECTION_NAME, "locale", fallback=None)
+    something_changed = False
 
-        print(_("info.language_saved_is", language=saved_locale))
+    print(_("info.language_saved_is", language=saved_locale))
 
-        answer = Confirm.ask(_("prompts.want_to_change_this_param"))
+    answer = inquirer.confirm(
+        _("prompts.want_to_change_this_param"), default=True, qmark=""
+    ).execute()
 
-        # User aborted
-        if answer is None:
-            raise typer.Abort()
+    # User wants to save locale
+    if answer:
+        chosen_locale = _prompt_user_for_locale()
 
-        # User wants to save locale
-        if answer:
-            chosen_locale = _prompt_user_for_locale()
+        config.set(SECTION_NAME, "locale", chosen_locale)
+        something_changed = True
 
-            config.set(SECTION_NAME, "locale", chosen_locale)
-            something_changed = True
+        # Translate the saved city name
+        current_city_id = config.get(SECTION_NAME, "city_id", fallback=None)
+        if current_city_id is not None:
+            config.set(SECTION_NAME, "city_name", _(f"cities._{current_city_id}"))
 
-            # Translate the saved city name
-            current_city_id = config.get(SECTION_NAME, "city_id", fallback=None)
-            if current_city_id is not None:
-                config.set(SECTION_NAME, "city_name", _(f"cities._{current_city_id}"))
+    print()
+    want_to_change_city = None
+    saved_city_name = config.get(SECTION_NAME, "city_name", fallback=None)
+    if saved_city_name is not None:
+        print(_("info.city_saved_is", city=saved_city_name))
+        want_to_change_city = inquirer.confirm(
+            _("prompts.want_to_change_this_param"), default=True, qmark=""
+        ).execute()
 
+    if saved_city_name is None or want_to_change_city is True:
+        city_id, city_name = _prompt_user_for_city(Habous_api.get_cities())
+        config.set(SECTION_NAME, "city_id", str(city_id))
+        config.set(SECTION_NAME, "city_name", city_name)
+        something_changed = True
+
+    if something_changed:
+        _flush()
         print()
-        want_to_change_city = None
-        saved_city_name = config.get(SECTION_NAME, "city_name", fallback=None)
-        if saved_city_name is not None:
-            print(_("info.city_saved_is", city=saved_city_name))
-            want_to_change_city = Confirm.ask(_("prompts.want_to_change_this_param"))
-
-            # User aborted
-            if want_to_change_city is None:
-                raise typer.Abort()
-
-        if saved_city_name is None or want_to_change_city is True:
-            city_id, city_name = _prompt_user_for_city(Habous_api.get_cities())
-            config.set(SECTION_NAME, "city_id", str(city_id))
-            config.set(SECTION_NAME, "city_name", city_name)
-            something_changed = True
-
-        if something_changed:
-            _flush()
-            print()
-            print(_("success.config_saved"))
-    except Exception:
-        raise
+        print(_("success.config_saved"))
 
 
 @app.command(
@@ -345,7 +321,7 @@ def next_prayer_time():
                 next_prayer_index = index
                 break
             elif prayer_hour > current_hour or (
-                prayer_hour == current_hour and prayer_minute > current_minute
+                    prayer_hour == current_hour and prayer_minute > current_minute
             ):
                 next_prayer_time_string = f"{prayer_hour:02}:{prayer_minute:02}"
                 next_prayer_index = index
@@ -411,13 +387,7 @@ def default(ctx: typer.Context):
 
     _check_for_upgrade()
 
-    ctx.help_option_names = []  # Hide default help option
-
-    class CustomHelp(click.HelpFormatter):
-        def write_usage(self, prog: str, args: str = "", prefix=None):
-            self.buffer.append(f"Usage: {GLOBAL_COMMAND} COMMAND")
-
-    ctx.formatter_class = CustomHelp
+    _set_custom_help(ctx)
 
     """Default command is 'next'"""
     if ctx.invoked_subcommand is not None:
@@ -425,6 +395,16 @@ def default(ctx: typer.Context):
     else:
         print(f'[bold]{_("commands_help.default_command_note")}\n[/bold]')
         next_prayer_time()
+
+
+def _set_custom_help(ctx):
+    ctx.help_option_names = []  # Hide default help option
+
+    class CustomHelp(click.HelpFormatter):
+        def write_usage(self, prog: str, args: str = "", prefix=None):
+            self.buffer.append(f"Usage: {GLOBAL_COMMAND} COMMAND")
+
+    ctx.formatter_class = CustomHelp
 
 
 def _check_for_upgrade():
