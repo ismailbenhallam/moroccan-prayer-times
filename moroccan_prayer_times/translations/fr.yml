@@ -10,8 +10,8 @@ fr:
     new_version_is_out: La version {version} est sortie 🎉
 
       Il est temps de se mettre à jour 😎
-    language_saved_is: 'Langue actuellement utilisée: "{language}"'
-    city_saved_is: 'Ville actuellement utilisée: "{city}"'
+    language_saved_is: "La langue utilisée: [cornflower_blue]français[/cornflower_blue]"
+    city_saved_is: "La ville enregistrée: [cornflower_blue]{city}[cornflower_blue]"
   success:
     city_saved: Ville enregistrée
     config_saved: Vos préférences ont été sauvegardées

@@ -10,8 +10,8 @@ en:
     new_version_is_out: Version {version} is out 🎉
       
       Time to upgrade 😎
-    language_saved_is: Language currently used is "{language}"
-    city_saved_is: City currently used is "{city}"
+    language_saved_is: "Language used: [cornflower_blue]English[/cornflower_blue]"
+    city_saved_is: "City saved: [cornflower_blue]{city}[/cornflower_blue]"
   success:
     city_saved: City saved
     config_saved: Your preferences are saved

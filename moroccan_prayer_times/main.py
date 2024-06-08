@@ -164,7 +164,7 @@ def _prompt_user_for_city(city_options: dict[int, str] | None) -> tuple[int, str
         message=_("prompts.choose_city"),
         choices=city_options.values(),
         validate=lambda result: result in city_options.values(),
-        qmark="",
+        qmark="", amark=""
     ).execute()
 
     for city_id in city_options:
@@ -175,7 +175,7 @@ def _prompt_user_for_city(city_options: dict[int, str] | None) -> tuple[int, str
 def _prompt_user_for_locale():
     """Prompt the user to choose a locale from available locales"""
     language = inquirer.rawlist(
-        message=_("prompts.choose_locale"), choices=i18n.available_locales, qmark=""
+        message=_("prompts.choose_locale"), choices=i18n.available_locales, qmark="", amark=""
     ).execute()
     return language
 
@@ -188,7 +188,7 @@ def _city_from_cache_or_prompt_then_save() -> dict[str, str]:
         print(f"[bold dark_orange]{_('warnings.city_not_saved')}[/bold dark_orange]")
 
         answer = inquirer.confirm(
-            _("prompts.choose_city_now_and_reuse_it"), default=True, qmark=""
+            _("prompts.choose_city_now_and_reuse_it"), default=True, qmark="", amark=""
         ).execute()
 
         if answer:
@@ -216,12 +216,9 @@ def _city_from_cache_or_prompt_then_save() -> dict[str, str]:
 )
 def get_config():
     """Show the user config"""
-    city_name = config.get(SECTION_NAME, "city_name", fallback=None)
-    locale = config.get(SECTION_NAME, "locale", fallback=None)
-    print(
-        f"""city_name= {city_name}\nlocale= {locale}
-    """
-    )
+    city_saved = config.get(SECTION_NAME, "city_name", fallback=None)
+    print("=> ",_("info.language_saved_is"))
+    print("=> ",_("info.city_saved_is", city=city_saved))
 
 
 @app.command(
@@ -231,14 +228,11 @@ def get_config():
 )
 def setup():
     """Change the user preferences"""
-    # Always existing, because we set it as {DEFAULT_LOCALE} iat the program launch (if it's not found in the config file)
-    saved_locale = config.get(SECTION_NAME, "locale", fallback=None)
     something_changed = False
-
-    print(_("info.language_saved_is", language=saved_locale))
+    print(_("info.language_saved_is"))
 
     answer = inquirer.confirm(
-        _("prompts.want_to_change_this_param"), default=True, qmark=""
+        _("prompts.want_to_change_this_param"), default=True, qmark="", amark=""
     ).execute()
 
     # User wants to save locale
@@ -259,7 +253,7 @@ def setup():
     if saved_city_name is not None:
         print(_("info.city_saved_is", city=saved_city_name))
         want_to_change_city = inquirer.confirm(
-            _("prompts.want_to_change_this_param"), default=True, qmark=""
+            _("prompts.want_to_change_this_param"), default=True, qmark="", amark=""
         ).execute()
 
     if saved_city_name is None or want_to_change_city is True:
@@ -380,10 +374,7 @@ def help(ctx: typer.Context):
 
 @app.callback(invoke_without_command=True)
 def default(ctx: typer.Context):
-    f"""Create the config file with the default language as {DEFAULT_LOCALE}"""
-    if config.get(SECTION_NAME, "locale", fallback=None) is None:
-        config.set(SECTION_NAME, "locale", DEFAULT_LOCALE)
-        _flush()
+    _create_config_file_with_default_locale()
 
     _check_for_upgrade()
 
@@ -395,6 +386,13 @@ def default(ctx: typer.Context):
     else:
         print(f'[bold]{_("commands_help.default_command_note")}\n[/bold]')
         next_prayer_time()
+
+
+def _create_config_file_with_default_locale():
+    f"""Create the config file with the default language as {DEFAULT_LOCALE}"""
+    if config.get(SECTION_NAME, "locale", fallback=None) is None:
+        config.set(SECTION_NAME, "locale", DEFAULT_LOCALE)
+        _flush()
 
 
 def _set_custom_help(ctx):
