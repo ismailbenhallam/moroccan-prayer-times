@@ -14,8 +14,12 @@ from beautifultable import BeautifulTable, Style
 from bs4 import BeautifulSoup
 from pyi18n import PyI18n
 from rich import print
+from rich.console import Console
+from rich.panel import Panel
 from rich.prompt import Confirm
 from InquirerPy import inquirer
+from packaging import version
+from . import __version__
 
 # Constants
 APP_NAME = "Prayer Times CLI"
@@ -405,6 +409,8 @@ def default(ctx: typer.Context):
         config.set(SECTION_NAME, "locale", DEFAULT_LOCALE)
         _flush()
 
+    _check_for_upgrade()
+
     ctx.help_option_names = []  # Hide default help option
 
     class CustomHelp(click.HelpFormatter):
@@ -419,6 +425,36 @@ def default(ctx: typer.Context):
     else:
         print(f'[bold]{_("commands_help.default_command_note")}\n[/bold]')
         next_prayer_time()
+
+
+def _check_for_upgrade():
+    """Check if a new version is available"""
+    latest_upgrade_check_date = config.get(
+        SECTION_NAME, "lastest_upgrade_check_time", fallback=None
+    )
+    today_date = str(datetime.today().date())
+
+    if today_date != latest_upgrade_check_date:
+        pypi_url = "https://pypi.org/pypi/moroccan-prayer-times/json"
+        try:
+            response = requests.get(pypi_url)
+            response.raise_for_status()
+            pypi_latest_version = response.json()["info"]["version"]
+
+            if version.parse(pypi_latest_version) > version.parse(__version__):
+                Console().print(
+                    Panel(
+                        f"[cornflower_blue]{_('info.new_version_is_out', version=pypi_latest_version)}",
+                        style="green",
+                    ),
+                    justify="left",
+                )
+
+            # Save today as latest check date, check tomorrow again..
+            config.set(SECTION_NAME, "lastest_upgrade_check_time", today_date)
+            _flush()
+        except Exception:
+            pass
 
 
 def main():

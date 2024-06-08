@@ -7,6 +7,9 @@ en:
     _4: Al-Maghrib
     _5: Al-Ishaa
   info:
+    new_version_is_out: Version {version} is out 🎉
+      
+      Time to upgrade 😎
     language_saved_is: Language currently used is "{language}"
     city_saved_is: City currently used is "{city}"
   success:

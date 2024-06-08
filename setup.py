@@ -1,4 +1,5 @@
 from setuptools import setup, find_packages
+from moroccan_prayer_times import  __version__
 
 with open("requirements.txt", "r", encoding="utf-8") as f:
     requirements = f.read().splitlines()
@@ -8,7 +9,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="moroccan_prayer_times",
-    version="0.0.19",
+    version=__version__,
     author="Ismail BENHALLAM",
     author_email="ismailben44@gmail.com",
     packages=find_packages(),
