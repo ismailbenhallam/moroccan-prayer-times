@@ -164,7 +164,8 @@ def _prompt_user_for_city(city_options: dict[int, str] | None) -> tuple[int, str
         message=_("prompts.choose_city"),
         choices=city_options.values(),
         validate=lambda result: result in city_options.values(),
-        qmark="", amark=""
+        qmark="",
+        amark="",
     ).execute()
 
     for city_id in city_options:
@@ -175,7 +176,10 @@ def _prompt_user_for_city(city_options: dict[int, str] | None) -> tuple[int, str
 def _prompt_user_for_locale():
     """Prompt the user to choose a locale from available locales"""
     language = inquirer.rawlist(
-        message=_("prompts.choose_locale"), choices=i18n.available_locales, qmark="", amark=""
+        message=_("prompts.choose_locale"),
+        choices=i18n.available_locales,
+        qmark="",
+        amark="",
     ).execute()
     return language
 
@@ -217,8 +221,8 @@ def _city_from_cache_or_prompt_then_save() -> dict[str, str]:
 def get_config():
     """Show the user config"""
     city_saved = config.get(SECTION_NAME, "city_name", fallback=None)
-    print("=> ",_("info.language_saved_is"))
-    print("=> ",_("info.city_saved_is", city=city_saved))
+    print("=> ", _("info.language_saved_is"))
+    print("=> ", _("info.city_saved_is", city=city_saved))
 
 
 @app.command(
@@ -323,9 +327,11 @@ def next_prayer_time():
 
         if is_now:
             prayer_name_in_locale = _(f"prayers_by_index._{next_prayer_index}")
+            print()
             print(
-                f'[dark_orange bold]{_("success.next_prayer_now", prayer=prayer_name_in_locale)}[/dark_orange bold]'
+                f' => [dark_orange bold]{_("success.next_prayer_now", prayer=prayer_name_in_locale)}[/dark_orange bold]'
             )
+            print()
         else:
             is_tomorrow = False
             if next_prayer_time_string is None:
@@ -350,14 +356,17 @@ def next_prayer_time():
                 path = "success.next_prayer_in_hours"
             else:
                 path = "success.next_prayer_in"
+            print()
             print(
+                " => ",
                 _(
                     path,
                     prayer=prayer,
                     hours=hours,
                     minutes=minutes,
-                )
+                ),
             )
+            print()
     else:
         print(_("errors.retrieving_data_failed"))
 
@@ -384,7 +393,7 @@ def default(ctx: typer.Context):
     if ctx.invoked_subcommand is not None:
         return
     else:
-        print(f'[bold]{_("commands_help.default_command_note")}\n[/bold]')
+        print(f'[sea_green1]{_("commands_help.default_command_note")}[/sea_green1]')
         next_prayer_time()
 
 
