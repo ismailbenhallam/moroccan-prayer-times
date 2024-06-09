@@ -283,10 +283,31 @@ def today_prayer_times():
         city_id = _city_from_cache_or_prompt_then_save().get("city_id")
         prayer_times = Habous_api.get_prayer_times_by_city_id(int(city_id))
         if prayer_times:
+            current_time = datetime.now()
+            current_hour = current_time.hour
+            current_minute = current_time.minute
+
             table = BeautifulTable()
             table.set_style(Style.STYLE_BOX_ROUNDED)
+            is_next_set = False
+
             for index, time in enumerate(prayer_times.values()):
-                table.rows.append([time, _(f"prayers_by_index._{index}")])
+                prayer_date = datetime.strptime(time, "%H:%M")
+                prayer_hour = prayer_date.hour
+                prayer_minute = prayer_date.minute
+
+                if is_next_set is False and (
+                    (prayer_hour == current_hour and prayer_minute == current_minute)
+                    or (
+                        prayer_hour > current_hour
+                        or prayer_hour == current_hour
+                        and prayer_minute > current_minute
+                    )
+                ):
+                    is_next_set = True
+                    table.rows.append([time, f"{_(f'prayers_by_index._{index}')} <="])
+                else:
+                    table.rows.append([time, _(f"prayers_by_index._{index}")])
             print(table)
         else:
             print(_("errors.retrieving_data_failed"))
