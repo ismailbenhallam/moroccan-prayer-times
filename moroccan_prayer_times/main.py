@@ -304,8 +304,7 @@ def next_prayer_time():
     city_id = _city_from_cache_or_prompt_then_save().get("city_id")
     prayer_times = Habous_api.get_prayer_times_by_city_id(int(city_id))
     if prayer_times:
-        now = datetime.now()
-        current_time = now
+        current_time = datetime.now()
         current_hour = current_time.hour
         current_minute = current_time.minute
         next_prayer_time_string = None
@@ -373,12 +372,21 @@ def next_prayer_time():
 
 @app.command(
     name="help",
-    help="Show this message and exit.",
+    help=_("commands_help.help"),
     short_help=_("commands_help.help"),
 )
-def help(ctx: typer.Context):
+def display_help(ctx: typer.Context):
     """Show the help message"""
     print(ctx.parent.get_help())
+
+@app.command(
+    name="version",
+    help=_("commands_help.version"),
+    short_help=_("commands_help.version"),
+)
+def display_version(ctx: typer.Context):
+    """Show the help message"""
+    print(__version__)
 
 
 @app.callback(invoke_without_command=True)

@@ -25,12 +25,13 @@ en:
     choose_locale: Please choose your language
     want_to_change_this_param: Would you like to change this option?
   commands_help:
-    default_command_note: '[magenta]Note:[/magenta] Default command will be executed, which is "next". Use "help" to see the full usage.'
+    default_command_note: 'The default command will be executed, which is "next". Use "help" to see the full usage.'
     config: Show my config
     setup: Change your preferences
     today: Display today's prayer times
     next: Display the time remaining until the next prayer
     help: Show this message and exit
+    version: Display the current version
   warnings:
     city_not_saved: City information not found!
   errors:

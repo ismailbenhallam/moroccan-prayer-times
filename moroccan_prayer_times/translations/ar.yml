@@ -25,7 +25,7 @@ ar:
     choose_locale: يرجى اختيار اللغة
     want_to_change_this_param: هل تريد تغيير هذا الإعداد؟
   commands_help:
-    default_command_note: ' "next" [magenta]ملحوظة:[/magenta] سيتم تنفيذ الأمر التلقائي 
+    default_command_note: ' "next" سيتم تنفيذ الأمر التلقائي 
 
        لمعرفة الاستخدام الكامل "help"'
     config: عرض الإعدادات الخاصة بي
@@ -33,6 +33,7 @@ ar:
     today: عرض أوقات الصلاة اليوم
     next: عرض الوقت المتبقي حتى موعد الصلاة التالية
     help: عرض هذا النص والخروج
+    version: عرض الإصدار الحالي
   warnings:
     city_not_saved: معلومات المدينة غير موجودة!
   errors:
