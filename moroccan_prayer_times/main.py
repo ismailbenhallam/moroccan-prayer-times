@@ -400,6 +400,7 @@ def display_help(ctx: typer.Context):
     """Show the help message"""
     print(ctx.parent.get_help())
 
+
 @app.command(
     name="version",
     help=_("commands_help.version"),
@@ -407,7 +408,7 @@ def display_help(ctx: typer.Context):
 )
 def display_version(ctx: typer.Context):
     """Show the help message"""
-    print(__version__)
+    print(f"[cornflower_blue]{__version__}[/cornflower_blue]")
 
 
 @app.callback(invoke_without_command=True)
