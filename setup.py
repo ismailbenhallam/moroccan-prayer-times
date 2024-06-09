@@ -22,7 +22,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     keywords=["prayer times", "prayer_times", "prayer", "morocco"],
-    url="https://github.com/ismailbenhallam/prayer-times-cli/",
+    url="https://github.com/ismailbenhallam/moroccan-prayer-times/",
     entry_points={
         "console_scripts": [
             "prayertime=moroccan_prayer_times.main:main",

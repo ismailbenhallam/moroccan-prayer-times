@@ -63,7 +63,7 @@ class Habous_api:
     @staticmethod
     def get_prayer_times_by_city_id(city_id: int) -> dict[str, str] | None:
         """Get today's Moroccan Prayer Times by city id"""
-        today_cache = TIMES_CACHE_FOLDER / str(datetime.today().date())
+        today_cache = TIMES_CACHE_FOLDER / f"{city_id}_{datetime.today().date()}"
         try:
             # Reading from cache if it exists
             with open(today_cache, "r", encoding="utf-8") as file:
