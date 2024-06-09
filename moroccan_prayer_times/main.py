@@ -423,7 +423,7 @@ def default(ctx: typer.Context):
     if ctx.invoked_subcommand is not None:
         return
     else:
-        print(f'[sea_green1]{_("commands_help.default_command_note")}[/sea_green1]')
+        print(f'[slate_blue1]{_("commands_help.default_command_note")}[/slate_blue1]')
         next_prayer_time()
 
 
