@@ -378,12 +378,13 @@ def next_prayer_time():
                 path = "success.next_prayer_in"
             print()
             print(
-                " => ",
+                " ",
                 _(
                     path,
                     prayer=prayer,
                     hours=hours,
                     minutes=minutes,
+                    at=next_prayer_time_string,
                 ),
             )
             print()

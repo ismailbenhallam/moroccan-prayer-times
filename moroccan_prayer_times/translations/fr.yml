@@ -15,9 +15,9 @@ fr:
   success:
     city_saved: Ville enregistrée
     config_saved: Vos préférences ont été sauvegardées
-    next_prayer_in: "{prayer} dans {hours} heure(s) et {minutes} minute(s)"
-    next_prayer_in_hours: "{prayer} dans {hours} heure(s)"
-    next_prayer_in_minutes: "{prayer} dans {minutes} minutes(s)"
+    next_prayer_in: "{prayer} à {at} => {hours} heure(s) et {minutes} minute(s) restante(s)"
+    next_prayer_in_hours: "{prayer} à {at} => {hours} heure(s) restante(s)"
+    next_prayer_in_minutes: "{prayer} à {at} => {minutes} minutes(s) restante(s)"
     next_prayer_now: "{prayer} maintenant!"
   prompts:
     choose_city_now_and_reuse_it: Voulez-vous choisir votre ville et la sauvegarder pour une utilisation ultérieure ?
