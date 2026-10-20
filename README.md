@@ -9,14 +9,15 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/ismailbenhallam/prayer-times-cli?)-->
 
 A command-line interface (CLI) application to fetch and display Moroccan prayer times for the current day or the next
-prayer time remaining, using data provided by the official [Moroccan Ministry of Habous and Islamic Affairs
-website](https://habous.gov.ma/).
+prayer time remaining. The data comes, by default, from the official [Moroccan Ministry of Habous and Islamic Affairs
+website](https://habous.gov.ma/), and other [providers](#providers) can be selected.
 
 ## Features
 
 - Display today's prayer times for a selected Moroccan city
 - Show the time remaining until the next prayer
-- Configure the preferred city and language
+- Configure the preferred city, language and prayer times provider
+- Pluggable prayer times providers ([Habous](https://habous.gov.ma/) and [Aladhan](https://aladhan.com/prayer-times-api) included)
 - Caching the fetched prayer times for better performance
 - Localization support for Arabic, English, and French languages
 
@@ -55,8 +56,8 @@ This will display the list of available commands and their descriptions.
 
 - `prayertime next`: Show the remaining time until the next prayer.
 - `prayertime today`: Display today's prayer times for the configured city.
-- `prayertime config`: Display the current configuration (city and language).
-- `prayertime setup`: Configure the preferred city and language.
+- `prayertime config`: Display the current configuration (city, language and provider).
+- `prayertime setup`: Configure the preferred city, language and provider.
 - `prayertime help`: Show the help message.
 
 > Note: the default command is `next`.
@@ -66,7 +67,66 @@ This will display the list of available commands and their descriptions.
 The first time you run the application, it will prompt you to select a city (**english** is the default language). These
 settings will be saved for future use.
 
-You can change the _**city**_ or the **_language_** anytime using the `setup` command.
+You can change the _**city**_, the **_language_** or the **_provider_** anytime using the `setup` command.
+
+### Providers
+
+A provider is the source of the prayer times. The `provider` is part of the config and defaults to `habous`.
+
+| Provider  | Source                                                      |
+|-----------|-------------------------------------------------------------|
+| `habous`  | [habous.gov.ma](https://habous.gov.ma/) (default)           |
+| `aladhan` | [api.aladhan.com](https://aladhan.com/prayer-times-api) (method 21, Morocco), limited to a subset of the cities |
+
+> Aladhan finds a city by its name and cannot resolve many small towns, so `aladhan` only offers the cities that were
+> verified to work (`scripts/check_aladhan_cities.sh` and `scripts/reverify_aladhan_cities.sh` re-check them).
+> If your saved city isn't available when you switch to it, `setup` asks you to pick another one.
+
+Choose it with `prayertime setup`, or by editing the `provider` entry of the config file. The `PRAYERTIME_PROVIDER`
+environment variable overrides the saved value, which is handy for a one-off run:
+
+```shell
+PRAYERTIME_PROVIDER=aladhan prayertime today
+```
+
+#### Adding a provider
+
+A provider is a subclass of `PrayerTimesProvider` (`moroccan_prayer_times/providers/base.py`). It only has to define:
+
+- `name`: the identifier used in the config,
+- `get_cities()`: the available cities (`{id: name}`),
+- `fetch_prayer_times(city_id)`: today's six times (Fajr, Sunrise, Dhuhr, Asr, Maghrib, Isha) as `"HH:MM"`.
+
+The `today` and `next` commands are implemented by the base class on top of those (with a per-day cache), and can be
+overridden if a provider needs something different.
+
+```python
+from moroccan_prayer_times.providers import PrayerTimesProvider, register
+
+
+@register
+class MyProvider(PrayerTimesProvider):
+    name = "my-provider"
+
+    def get_cities(self):
+        return {1: "Rabat"}
+
+    def fetch_prayer_times(self, city_id):
+        return {"Fajr": "05:03", "Sunrise": "06:31", "Dhuhr": "12:12",
+                "Asr": "15:17", "Maghrib": "17:47", "Isha": "19:01"}
+```
+
+Inside this package, put the class in a new module of `moroccan_prayer_times/providers/` (like `aladhan.py`): `@register` is enough, the modules of that folder are discovered automatically.
+
+From an external package, declare it as an entry point instead and it will be discovered automatically:
+
+```python
+# setup.py of the plugin
+entry_points={"moroccan_prayer_times.providers": ["my-provider = my_package.module:MyProvider"]}
+```
+
+> City ids are the ones of the Habous website; they are shared by all the providers, which map them to their own
+> cities.
 
 > **NOTE:** If you choose to use the Arabic language option with this package, make sure to check the following:
 >
@@ -77,6 +137,13 @@ You can change the _**city**_ or the **_language_** anytime using the `setup` co
      Without proper font support, Arabic text may not render correctly.
 
 ## Contributing
+
+To run the tests:
+
+```shell
+pip install -r requirements.txt -r requirements-dev.txt
+python -m pytest tests
+```
 
 Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a
 pull request on the [GitHub repository](https://github.com/ismailbenhallam/prayer-times-cli/).

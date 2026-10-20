@@ -12,6 +12,7 @@ fr:
       Il est temps de se mettre à jour 😎
     language_saved_is: "La langue utilisée: [cornflower_blue]français[/cornflower_blue]"
     city_saved_is: "La ville enregistrée: [cornflower_blue]{city}[cornflower_blue]"
+    provider_saved_is: "Source utilisée: [cornflower_blue]{provider}[/cornflower_blue]"
   success:
     city_saved: Ville enregistrée
     config_saved: Vos préférences ont été sauvegardées
@@ -23,6 +24,7 @@ fr:
     choose_city_now_and_reuse_it: Voulez-vous choisir votre ville et la sauvegarder pour une utilisation ultérieure ?
     choose_city: Veuillez selectionner une ville
     choose_locale: Veuillez selectionner votre langue
+    choose_provider: "Veuillez sélectionner la source des horaires de prière"
     want_to_change_this_param: Voulez-vous changer ce paramètre ?
   commands_help:
     default_command_note: 'La commande par défaut sera exécutée, à savoir "next". Utilisez "help" pour voir l''utilisation complète.'
@@ -34,8 +36,10 @@ fr:
     version: Afficher la version actuelle
   warnings:
     city_not_saved: Informations sur la ville non trouvées!
-  error:
+    city_not_available: "La ville enregistrée n'est pas disponible avec cette source, veuillez en choisir une autre"
+  errors:
     retrieving_data_failed: Erreur lors du chargement des villes. Veuillez réessayer plus tard
+    unknown_provider: "Source '{provider}' inconnue. Sources disponibles: {available}"
   cities:
     _1: 'Rabat'
     _2: 'Khémisset'

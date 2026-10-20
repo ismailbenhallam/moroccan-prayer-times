@@ -12,6 +12,7 @@ en:
       Time to upgrade 😎
     language_saved_is: "Language used: [cornflower_blue]English[/cornflower_blue]"
     city_saved_is: "City saved: [cornflower_blue]{city}[/cornflower_blue]"
+    provider_saved_is: "Provider used: [cornflower_blue]{provider}[/cornflower_blue]"
   success:
     city_saved: City saved
     config_saved: Your preferences are saved
@@ -23,6 +24,7 @@ en:
     choose_city_now_and_reuse_it: Would you like to choose your city and save it for further usage ?
     choose_city: Please choose a city
     choose_locale: Please choose your language
+    choose_provider: "Please choose a prayer times provider"
     want_to_change_this_param: Would you like to change this option?
   commands_help:
     default_command_note: 'The default command will be executed, which is "next". Use "help" to see the full usage.'
@@ -34,8 +36,10 @@ en:
     version: Display the current version
   warnings:
     city_not_saved: City information not found!
+    city_not_available: "The saved city is not available with this provider, please choose another one"
   errors:
     retrieving_data_failed: Failed to retrieve data.
+    unknown_provider: "Unknown provider '{provider}'. Available providers: {available}"
     loading_cities_failed: Error while trying to load cities. Please retry later
   cities:
     _1: 'Rabat'

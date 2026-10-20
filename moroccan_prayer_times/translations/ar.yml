@@ -12,6 +12,7 @@ ar:
     حان وقت الترقية 😎'
     language_saved_is: 'اللغة المستخدمة: [cornflower_blue]العربية[/cornflower_blue]ً'
     city_saved_is: المدينة المحفوظة :[cornflower_blue]{city}[/cornflower_blue]ً
+    provider_saved_is: "المصدر المستخدم: [cornflower_blue]{provider}[/cornflower_blue]"
   success:
     city_saved: تم حفظ المدينة
     config_saved: تم حفظ خياراتك
@@ -23,6 +24,7 @@ ar:
     choose_city_now_and_reuse_it: هل ترغب في اختيار مدينتك وحفظها لاستخدامها مرة أخرى؟
     choose_city: يرجى اختيار المدينة
     choose_locale: يرجى اختيار اللغة
+    choose_provider: "يرجى اختيار مصدر أوقات الصلاة"
     want_to_change_this_param: هل تريد تغيير هذا الإعداد؟
   commands_help:
     default_command_note: ' "next" سيتم تنفيذ الأمر التلقائي 
@@ -36,8 +38,10 @@ ar:
     version: عرض الإصدار الحالي
   warnings:
     city_not_saved: معلومات المدينة غير موجودة!
+    city_not_available: "المدينة المحفوظة غير متوفرة مع هذا المصدر، يرجى اختيار مدينة أخرى"
   errors:
     retrieving_data_failed: فشل في الحصول على البيانات.
+    unknown_provider: "المصدر '{provider}' غير معروف. المصادر المتاحة: {available}"
     loading_cities_failed: خطأ أثناء محاولة تحميل المدن. الرجاء إعادة المحاولة لاحقاً
   cities:
     _1: 'الرباط'
