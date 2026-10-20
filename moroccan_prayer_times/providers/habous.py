@@ -14,7 +14,7 @@ class HabousProvider(PrayerTimesProvider):
     def get_cities(self) -> dict[int, str] | None:
         try:
             response = requests.get(
-                "https://habous.gov.ma/prieres/index.php", verify=False
+                "https://habous.gov.ma/prieres/index.php", verify=False, timeout=(5, 10)
             )
         except requests.RequestException:
             return None
@@ -48,7 +48,7 @@ class HabousProvider(PrayerTimesProvider):
     def fetch_prayer_times(self, city_id: int) -> dict[str, str] | None:
         url = f"https://www.habous.gov.ma/prieres/horaire-api.php?ville={city_id}"
         try:
-            response = requests.get(url, verify=False)
+            response = requests.get(url, verify=False, timeout=(5, 10))
         except requests.RequestException:
             return None
         if response.status_code != 200:

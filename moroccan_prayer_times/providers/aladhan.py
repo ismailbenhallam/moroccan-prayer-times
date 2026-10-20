@@ -50,7 +50,7 @@ class AladhanProvider(PrayerTimesProvider):
             response = requests.get(
                 f"https://api.aladhan.com/v1/timingsByCity/{today}",
                 params={"city": city, "country": "MA", "method": CALCULATION_METHOD},
-                timeout=15,
+                timeout=(5, 10),
             )
             response.raise_for_status()
             timings = response.json()["data"]["timings"]
