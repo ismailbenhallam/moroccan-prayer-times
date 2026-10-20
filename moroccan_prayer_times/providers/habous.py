@@ -28,13 +28,22 @@ class HabousProvider(PrayerTimesProvider):
 
         cities = {}
         for option in select_ville.find_all("option"):
-            if "value" in option.attrs:
-                try:
-                    # The value looks like "<path>?ville=<id>"
-                    cities[int(option["value"].split("=")[1])] = option.text
-                except (ValueError, IndexError):
-                    pass
+            city_id = self._city_id(option)
+            if city_id is not None:
+                cities[city_id] = option.text.strip()
         return cities
+
+    @staticmethod
+    def _city_id(option) -> int | None:
+        # The value looks like "<path>?ville=<id>", but the site sometimes emits
+        # "?ville= <id>" unquoted, which the parser splits into a stray attribute
+        value = option.attrs.get("value")
+        if value is None:
+            return None
+        id_part = value.split("=", 1)[-1].strip()
+        if not id_part:
+            id_part = next((name for name in option.attrs if name.isdigit()), "")
+        return int(id_part) if id_part.isdigit() else None
 
     def fetch_prayer_times(self, city_id: int) -> dict[str, str] | None:
         url = f"https://www.habous.gov.ma/prieres/horaire-api.php?ville={city_id}"

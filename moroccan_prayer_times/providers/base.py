@@ -42,7 +42,7 @@ class PrayerTimesProvider(ABC):
         try:
             with open(cache_file, "r", encoding="utf-8") as file:
                 return json.load(file)
-        except (FileNotFoundError, json.JSONDecodeError):
+        except (OSError, json.JSONDecodeError):
             pass
 
         prayer_times = self.fetch_prayer_times(city_id)

@@ -4,18 +4,11 @@ from pathlib import Path
 from unittest import mock
 
 import pytest
+import requests
+from conftest import TIMES
 
 from moroccan_prayer_times import providers
 from moroccan_prayer_times.providers.base import PrayerTimesProvider
-
-TIMES = {
-    "Fajr": "05:03",
-    "Sunrise": "06:31",
-    "Dhuhr": "12:12",
-    "Asr": "15:17",
-    "Maghrib": "17:47",
-    "Isha": "19:01",
-}
 
 
 def test_builtin_providers_are_registered():
@@ -95,3 +88,39 @@ def test_builtin_module_name_matches_provider_name(name):
 
     assert provider.name == name
     assert isinstance(provider, PrayerTimesProvider)
+
+
+@pytest.mark.parametrize(
+    "failure",
+    [requests.ConnectionError("blocked"), {"data": {}}],
+)
+def test_aladhan_failures_return_none(failure):
+    response = mock.Mock()
+    if isinstance(failure, Exception):
+        patched = mock.patch("requests.get", side_effect=failure)
+    else:
+        response.json.return_value = failure
+        patched = mock.patch("requests.get", return_value=response)
+
+    with patched:
+        assert providers.get_provider("aladhan").fetch_prayer_times(99) is None
+
+
+def test_provider_from_an_entry_point_is_loaded_on_demand():
+    class PluginProvider(PrayerTimesProvider):
+        name = "plugin"
+
+        def get_cities(self):
+            return {}
+
+        def fetch_prayer_times(self, city_id):
+            return TIMES
+
+    entry_point = mock.Mock(load=mock.Mock(return_value=PluginProvider))
+    entry_point.name = "plugin"
+    with mock.patch.object(providers, "entry_points", return_value=[entry_point]):
+        assert "plugin" in providers.available_providers()
+        entry_point.load.assert_not_called()
+
+        assert isinstance(providers.get_provider("plugin"), PluginProvider)
+    entry_point.load.assert_called_once()

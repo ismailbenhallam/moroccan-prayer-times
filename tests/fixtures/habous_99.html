@@ -1,0 +1,302 @@
+<head>
+    <title>Horaire de priere</title>
+    <meta http-equiv="content-type" content="text/plain; charset=UTF-8"/>
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-35630430-1']);
+        _gaq.push(['_setDomainName', 'habous.net']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        }
+        )();
+    </script>
+    <script>
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }
+            ,
+            i[r].l = 1 * new Date();
+            a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        }
+        )(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-29109116-1', 'habous.gov.ma');
+        ga('send', 'pageview');
+    </script>
+    <style>
+        @media only screen and (max-width: 600px) {
+            .hor_par {
+                width: 48%!important;
+            }
+
+            .hor_select {
+                width: 48%!important;
+            }
+
+            .hor_table {
+                clear: both;
+                width: 100%!important;
+                padding-top: 10px;
+            }
+
+            .hor_table td {
+                padding-left: 10px!important;
+            }
+
+            .btnhissa {
+                display: block!important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div style=" direction:rtl; padding-top:2px; height:80px; max-width:700px;">
+        <div class="hor_par" style="float:right; padding-top:5px; width:25%; text-align:right;">
+            <h2 style="color:#055D96;  font-size:1em; margin:0;">مواقيت الصلاة لمدينة </h2>
+            <h2 style="color:#055D96;  font-size:1em; margin:0;"></h2>
+            <h2 style="color:#055D96; font-size:0.8em; margin:0;">
+                الثلاثاء 8 جمادى الأولى 1448هـ<br>الموافق 20 أكتوبر 2026م				
+            </h2>
+        </div>
+        <div class="hor_select" style="float:right;  width:23%;">
+            <form id="MyForm" action="" method="post" name="horairep" style="padding-top:10px;">
+                <select name="ville" onChange="location.href=this.options[this.selectedIndex].value;" style="width: -moz-available;">
+                    <option value=horaire-api.php?ville= 1>الرباط</option>
+                    <option value=horaire-api.php?ville= 2>الخميسات</option>
+                    <option value=horaire-api.php?ville= 3>تيفلت</option>
+                    <option value=horaire-api.php?ville= 4>الرماني</option>
+                    <option value=horaire-api.php?ville= 5>والماس</option>
+                    <option value=horaire-api.php?ville= 6>بوزنيقة</option>
+                    <option value=horaire-api.php?ville= 7>القنيطرة</option>
+                    <option value=horaire-api.php?ville= 8>سيدي قاسم</option>
+                    <option value=horaire-api.php?ville= 9>سيدي يحيى الغرب</option>
+                    <option value=horaire-api.php?ville= 10>سيدي سليمان</option>
+                    <option value=horaire-api.php?ville= 11>سوق أربعاء الغرب</option>
+                    <option value=horaire-api.php?ville= 12>عرباوة</option>
+                    <option value=horaire-api.php?ville= 13>مولاي بوسلهام</option>
+                    <option value=horaire-api.php?ville= 14>طنجة</option>
+                    <option value=horaire-api.php?ville= 15>تطوان</option>
+                    <option value=horaire-api.php?ville= 16>العرائش</option>
+                    <option value=horaire-api.php?ville= 17>أصيلة</option>
+                    <option value=horaire-api.php?ville= 18>شفشاون</option>
+                    <option value=horaire-api.php?ville= 19>مرتيل</option>
+                    <option value=horaire-api.php?ville= 20>المضيق</option>
+                    <option value=horaire-api.php?ville= 21>القصر الكبير</option>
+                    <option value=horaire-api.php?ville= 22>القصر الصغير</option>
+                    <option value=horaire-api.php?ville= 23>الحسيمة</option>
+                    <option value=horaire-api.php?ville= 24>سبتة</option>
+                    <option value=horaire-api.php?ville= 25>الفنيدق</option>
+                    <option value=horaire-api.php?ville= 26>الجبهة</option>
+                    <option value=horaire-api.php?ville= 27>واد لاو</option>
+                    <option value=horaire-api.php?ville= 28>باب برد</option>
+                    <option value=horaire-api.php?ville= 29>وزان</option>
+                    <option value=horaire-api.php?ville= 30>بوسكور</option>
+                    <option value=horaire-api.php?ville= 31>وجدة</option>
+                    <option value=horaire-api.php?ville= 32>بركان</option>
+                    <option value=horaire-api.php?ville= 33>فكيك</option>
+                    <option value=horaire-api.php?ville= 34>بوعرفة</option>
+                    <option value=horaire-api.php?ville= 35>كرسيف</option>
+                    <option value=horaire-api.php?ville= 36>جرادة</option>
+                    <option value=horaire-api.php?ville= 37>عين الشعير</option>
+                    <option value=horaire-api.php?ville= 38>تاوريرت</option>
+                    <option value=horaire-api.php?ville= 39>الناظور</option>
+                    <option value=horaire-api.php?ville= 40>مليلية</option>
+                    <option value=horaire-api.php?ville= 41>دبدو</option>
+                    <option value=horaire-api.php?ville= 42>سلوان</option>
+                    <option value=horaire-api.php?ville= 43>بني أنصار</option>
+                    <option value=horaire-api.php?ville= 44>فرخانة</option>
+                    <option value=horaire-api.php?ville= 45>تالسينت</option>
+                    <option value=horaire-api.php?ville= 46>تندرارة</option>
+                    <option value=horaire-api.php?ville= 47>العيون الشرقية</option>
+                    <option value=horaire-api.php?ville= 48>بني ادرار</option>
+                    <option value=horaire-api.php?ville= 49>السعيدية</option>
+                    <option value=horaire-api.php?ville= 50>رأس الماء</option>
+                    <option value=horaire-api.php?ville= 51>تافوغالت</option>
+                    <option value=horaire-api.php?ville= 52>فزوان</option>
+                    <option value=horaire-api.php?ville= 53>أحفير</option>
+                    <option value=horaire-api.php?ville= 54>زايو</option>
+                    <option value=horaire-api.php?ville= 55>دريوش</option>
+                    <option value=horaire-api.php?ville= 56>بني تجيت</option>
+                    <option value=horaire-api.php?ville= 57>بوعنان</option>
+                    <option value=horaire-api.php?ville= 58>الدار البيضاء</option>
+                    <option value=horaire-api.php?ville= 59>المحمدية</option>
+                    <option value=horaire-api.php?ville= 60>بن سليمان</option>
+                    <option value=horaire-api.php?ville= 61>سطات</option>
+                    <option value=horaire-api.php?ville= 62>الكارة</option>
+                    <option value=horaire-api.php?ville= 63>البروج</option>
+                    <option value=horaire-api.php?ville= 64>ابن أحمد</option>
+                    <option value=horaire-api.php?ville= 65>برشيد</option>
+                    <option value=horaire-api.php?ville= 66>الجديدة</option>
+                    <option value=horaire-api.php?ville= 67>أزمور</option>
+                    <option value=horaire-api.php?ville= 68>سيدي بنور</option>
+                    <option value=horaire-api.php?ville= 69>خميس الزمامرة</option>
+                    <option value=horaire-api.php?ville= 70>خنيفرة</option>
+                    <option value=horaire-api.php?ville= 71>مولاي بوعزة</option>
+                    <option value=horaire-api.php?ville= 72>زاوية أحنصال</option>
+                    <option value=horaire-api.php?ville= 73>بني ملال</option>
+                    <option value=horaire-api.php?ville= 74>أزيلال</option>
+                    <option value=horaire-api.php?ville= 75>الفقيه بنصالح</option>
+                    <option value=horaire-api.php?ville= 76>دمنات</option>
+                    <option value=horaire-api.php?ville= 77>القصيبة</option>
+                    <option value=horaire-api.php?ville= 78>قصبة تادلة</option>
+                    <option value=horaire-api.php?ville= 79>خريبكة</option>
+                    <option value=horaire-api.php?ville= 80>وادي زم</option>
+                    <option value=horaire-api.php?ville= 81>فاس</option>
+                    <option value=horaire-api.php?ville= 82>صفرو</option>
+                    <option value=horaire-api.php?ville= 83>مولاي يعقوب</option>
+                    <option value=horaire-api.php?ville= 84>بولمان</option>
+                    <option value=horaire-api.php?ville= 85>ميسور</option>
+                    <option value=horaire-api.php?ville= 86>رباط الخير</option>
+                    <option value=horaire-api.php?ville= 87>المنزل بني يازغة</option>
+                    <option value=horaire-api.php?ville= 88>إموزار كندر</option>
+                    <option value=horaire-api.php?ville= 89>تازة</option>
+                    <option value=horaire-api.php?ville= 90>تاونات</option>
+                    <option value=horaire-api.php?ville= 91>أكنول</option>
+                    <option value=horaire-api.php?ville= 92>تيزي وسلي</option>
+                    <option value=horaire-api.php?ville= 93>بورد</option>
+                    <option value=horaire-api.php?ville= 94>تاهلة</option>
+                    <option value=horaire-api.php?ville= 95>تيسة</option>
+                    <option value=horaire-api.php?ville= 96>قرية با محمد</option>
+                    <option value=horaire-api.php?ville= 97>كتامة</option>
+                    <option value=horaire-api.php?ville= 98>واد أمليل</option>
+                    <option value=horaire-api.php?ville= 99 selected=selected>مكناس</option>
+                    <option value=horaire-api.php?ville= 100>يفرن</option>
+                    <option value=horaire-api.php?ville= 101>الحاجب</option>
+                    <option value=horaire-api.php?ville= 102>زرهون</option>
+                    <option value=horaire-api.php?ville= 103>آزرو</option>
+                    <option value=horaire-api.php?ville= 104>مراكش</option>
+                    <option value=horaire-api.php?ville= 105>قلعة السراغنة</option>
+                    <option value=horaire-api.php?ville= 106>الصويرة</option>
+                    <option value=horaire-api.php?ville= 107>شيشاوة</option>
+                    <option value=horaire-api.php?ville= 108>بنجرير</option>
+                    <option value=horaire-api.php?ville= 109>الرحامنة</option>
+                    <option value=horaire-api.php?ville= 110>تمنار</option>
+                    <option value=horaire-api.php?ville= 111>آسفي</option>
+                    <option value=horaire-api.php?ville= 112>الوليدية</option>
+                    <option value=horaire-api.php?ville= 113>اليوسفية</option>
+                    <option value=horaire-api.php?ville= 114>تسلطانت</option>
+                    <option value=horaire-api.php?ville= 115>تامصلوحت</option>
+                    <option value=horaire-api.php?ville= 116>قطارة</option>
+                    <option value=horaire-api.php?ville= 117>أكادير</option>
+                    <option value=horaire-api.php?ville= 118>تارودانت</option>
+                    <option value=horaire-api.php?ville= 119>تزنيت</option>
+                    <option value=horaire-api.php?ville= 120>إغرم</option>
+                    <option value=horaire-api.php?ville= 121>تالوين</option>
+                    <option value=horaire-api.php?ville= 122>تافراوت</option>
+                    <option value=horaire-api.php?ville= 123>طاطا</option>
+                    <option value=horaire-api.php?ville= 124>أقا</option>
+                    <option value=horaire-api.php?ville= 125>فم لحصن</option>
+                    <option value=horaire-api.php?ville= 126>بويكرة</option>
+                    <option value=horaire-api.php?ville= 127>أولاد تايمة</option>
+                    <option value=horaire-api.php?ville= 128>الرشيدية</option>
+                    <option value=horaire-api.php?ville= 129>الريصاني</option>
+                    <option value=horaire-api.php?ville= 130>أرفود</option>
+                    <option value=horaire-api.php?ville= 131>تنديت</option>
+                    <option value=horaire-api.php?ville= 132>كلميمة</option>
+                    <option value=horaire-api.php?ville= 133>إملشيل</option>
+                    <option value=horaire-api.php?ville= 134>تنجداد</option>
+                    <option value=horaire-api.php?ville= 135>الريش</option>
+                    <option value=horaire-api.php?ville= 136>ميدلت</option>
+                    <option value=horaire-api.php?ville= 137>زاكورة</option>
+                    <option value=horaire-api.php?ville= 138>ورزازات</option>
+                    <option value=horaire-api.php?ville= 139>تنغير</option>
+                    <option value=horaire-api.php?ville= 140>هسكورة</option>
+                    <option value=horaire-api.php?ville= 141>قلعة مكونة</option>
+                    <option value=horaire-api.php?ville= 142>أكدز</option>
+                    <option value=horaire-api.php?ville= 143>بومالن دادس</option>
+                    <option value=horaire-api.php?ville= 144>النيف</option>
+                    <option value=horaire-api.php?ville= 145>أسول</option>
+                    <option value=horaire-api.php?ville= 146>أمسمرير</option>
+                    <option value=horaire-api.php?ville= 147>تازارين</option>
+                    <option value=horaire-api.php?ville= 148>سيدي إفني</option>
+                    <option value=horaire-api.php?ville= 149>كلميم</option>
+                    <option value=horaire-api.php?ville= 150>أسا</option>
+                    <option value=horaire-api.php?ville= 151>الزاك</option>
+                    <option value=horaire-api.php?ville= 152>طانطان</option>
+                    <option value=horaire-api.php?ville= 153>بويزكارن</option>
+                    <option value=horaire-api.php?ville= 154>المحبس</option>
+                    <option value=horaire-api.php?ville= 155>لمسيد</option>
+                    <option value=horaire-api.php?ville= 156>العيون</option>
+                    <option value=horaire-api.php?ville= 157>السمارة</option>
+                    <option value=horaire-api.php?ville= 158>بوجدور</option>
+                    <option value=horaire-api.php?ville= 159>طرفاية</option>
+                    <option value=horaire-api.php?ville= 160>تفاريتي</option>
+                    <option value=horaire-api.php?ville= 161>بوكراع</option>
+                    <option value=horaire-api.php?ville= 162>كلتة زمور</option>
+                    <option value=horaire-api.php?ville= 163>أمكالة</option>
+                    <option value=horaire-api.php?ville= 164>أخفنير</option>
+                    <option value=horaire-api.php?ville= 165>الداخلة</option>
+                    <option value=horaire-api.php?ville= 166>الكويرة</option>
+                    <option value=horaire-api.php?ville= 167>أوسرد</option>
+                    <option value=horaire-api.php?ville= 168>بئر كندوز</option>
+                    <option value=horaire-api.php?ville= 169>بئر أنزاران</option>
+                    <option value=horaire-api.php?ville= 301>خميس سيدي عبد الجليل</option>
+                    <option value=horaire-api.php?ville= 302>أولاد عياد</option>
+                    <option value=horaire-api.php?ville= 303>تاهلة</option>
+                    <option value=horaire-api.php?ville= 304>مطماطة</option>
+                    <option value=horaire-api.php?ville= 305>إيمنتانوت</option>
+                    <option value=horaire-api.php?ville= 306>سيدي غانم</option>
+                    <option value=horaire-api.php?ville= 307>تفنتان</option>
+                    <option value=horaire-api.php?ville= 308>آيت القاق</option>
+                    <option value=horaire-api.php?ville= 309>أكدال أملشيل</option>
+                    <option value=horaire-api.php?ville= 310>اكودال املشيل ميدلت</option>
+                    <option value=horaire-api.php?ville= 311>أكايوار</option>
+                    <option value=horaire-api.php?ville= 312>عين العودة</option>
+                    <option value=horaire-api.php?ville= 313>أسكين</option>
+                    <option value=horaire-api.php?ville= 314>آيت ورير</option>
+                    <option value=horaire-api.php?ville= 315>زاوية مولاي ابراهيم</option>
+                    <option value=horaire-api.php?ville= 316>تولكولت</option>
+                    <option value=horaire-api.php?ville= 317>إيكس</option>
+                    <option value=horaire-api.php?ville= 318>كرس</option>
+                    <option value=horaire-api.php?ville= 319>تيسنت</option>
+                    <option value=horaire-api.php?ville= 320>فم زكيد</option>
+                    <option value=horaire-api.php?ville= 321>قصر إيش</option>
+                    <option value=horaire-api.php?ville= 322>إيمين ثلاث</option>
+                </select>
+            </form>
+        </div>
+        <div class="hor_table" style="float:right;  width:52%;">
+            <table class="horaire" style="color:#000; font-weight:bold; font-size:0.8em;">
+                <tr>
+                    <td style="color:#000;">الفجر : </td>
+                    <td style="color:#055D96; padding-left:20px; ">05:03</td>
+                    <td style="color:#000;">الشروق : </td>
+                    <td style="color:#055D96; padding-left:20px;">06:26</td>
+                    <td style="color:#000;">الظهر : </td>
+                    <td style="color:#055D96; padding-left:20px;">12:12 </td>
+                </tr>
+                <tr>
+                    <td style="color:#000;">العصر : </td>
+                    <td style="color:#055D96; padding-left:20px;">
+
+					15:17
+				</td>
+                    <td style="color:#000;">المغرب : </td>
+                    <td style="color:#055D96; padding-left:20px;">17:48</td>
+                    <td style="color:#000;">العشاء :</td>
+                    <td style="color:#055D96; padding-left:20px;"> 19:01</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div style="display: none;" class="btnhissa">
+        <h3 style="margin: 0; font-size: 1em; margin-top: 15px; direction: rtl;">
+            <img src="https://www.habous.gov.ma/horaire%20de%20priere/icone-telechargement.png" alt="" style="width: 30px; vertical-align: middle; margin-left: 10px;"/>
+            <a href="https://www.habous.gov.ma/prieres/index.php" target="_blank" rel="noopener" style="padding: 5px 0; font-size: 1em; color: #e1001a; text-decoration: none; font-weight: bold;" title="حصة الصلاة الشهرية لجل المدن المغربية">حصة الصلاة الشهرية لجل المدن المغربية</a>
+        </h3>
+    </div>
+</body>
