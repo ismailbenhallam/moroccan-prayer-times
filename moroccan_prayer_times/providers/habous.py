@@ -10,6 +10,9 @@ class HabousProvider(PrayerTimesProvider):
     """Official website of the Moroccan Ministry of Habous and Islamic Affairs"""
 
     name = "habous"
+    description = (
+        "Official website of the Moroccan Ministry of Habous and Islamic Affairs."
+    )
 
     def get_cities(self) -> dict[int, str] | None:
         try:

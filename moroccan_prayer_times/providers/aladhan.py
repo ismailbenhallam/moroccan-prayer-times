@@ -28,6 +28,7 @@ class AladhanProvider(PrayerTimesProvider):
     """https://aladhan.com/prayer-times-api"""
 
     name = "aladhan"
+    description = "aladhan.com, a prayer times API by islamic.network."
 
     def get_cities(self) -> dict[int, str] | None:
         # Aladhan has no cities endpoint, so the bundled list is used

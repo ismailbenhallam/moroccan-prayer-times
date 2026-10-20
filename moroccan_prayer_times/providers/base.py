@@ -22,6 +22,8 @@ class PrayerTimesProvider(ABC):
 
     # Identifier used in the config file and in the PRAYERTIME_PROVIDER env var
     name: ClassVar[str]
+    # One line shown next to the name when the user picks a provider in `setup`
+    description: ClassVar[str] = ""
 
     @abstractmethod
     def get_cities(self) -> dict[int, str] | None:

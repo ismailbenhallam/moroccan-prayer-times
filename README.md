@@ -107,6 +107,7 @@ PRAYERTIME_PROVIDER=aladhan prayertime today
 A provider is a subclass of `PrayerTimesProvider` (`moroccan_prayer_times/providers/base.py`). It only has to define:
 
 - `name`: the identifier used in the config,
+- `description` (optional): a short sentence displayed next to the name when choosing a provider in `setup`,
 - `get_cities()`: the available cities (`{id: name}`),
 - `fetch_prayer_times(city_id)`: today's six times (Fajr, Sunrise, Dhuhr, Asr, Maghrib, Isha) as `"HH:MM"`.
 

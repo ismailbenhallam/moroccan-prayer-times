@@ -67,6 +67,27 @@ def test_config_shows_the_provider(clifake):
     assert "Rabat" in result.output
 
 
+def test_provider_choices_show_the_descriptions(monkeypatch):
+    captured = {}
+
+    def rawlist(**kwargs):
+        captured.update(kwargs)
+        return mock.Mock(execute=lambda: "habous")
+
+    monkeypatch.setattr(main.inquirer, "rawlist", rawlist)
+
+    assert main._prompt_user_for_provider() == "habous"
+    labels = {choice.value: choice.name for choice in captured["choices"]}
+    assert labels["aladhan"].startswith("aladhan - ")
+    assert labels["habous"].startswith("habous - ") and len(labels["habous"]) > 20
+
+
+def test_provider_without_description_or_broken_shows_its_name(monkeypatch):
+    monkeypatch.setattr(main, "get_provider", mock.Mock(side_effect=ImportError))
+
+    assert main._provider_label("broken") == "broken"
+
+
 def test_unknown_provider_is_reported(monkeypatch):
     monkeypatch.setenv(settings.PROVIDER_ENV_VAR, "nope")
     save(city_id="1", city_name="Rabat")

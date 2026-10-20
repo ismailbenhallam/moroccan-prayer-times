@@ -94,11 +94,21 @@ def _prompt_user_for_locale() -> str:
     ).execute()
 
 
+def _provider_label(name: str) -> str:
+    """ "name - description", importing the provider (only needed by `setup`)"""
+    try:
+        description = get_provider(name).description
+    except Exception:  # a broken third-party provider must not break `setup`
+        description = ""
+    return f"{name} - {description}" if description else name
+
+
 def _prompt_user_for_provider() -> str:
     """Prompt the user to choose a prayer times provider"""
+    names = available_providers()
     return inquirer.rawlist(
         message=_("prompts.choose_provider"),
-        choices=available_providers(),
+        choices=[Choice(name, _provider_label(name)) for name in names],
         default=(
             available_providers().index(get_provider_name()) + 1
             if get_provider_name() in available_providers()
