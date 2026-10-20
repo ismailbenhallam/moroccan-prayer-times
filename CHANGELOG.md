@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.1.1
+
+### Added
+- A short description of each provider is displayed when choosing one in `prayertime setup`.
+
+### Fixed
+- The publish workflow no longer fails because of the pinned `packaging` version.
+
 ## 2.1.0
 
 ### Added
