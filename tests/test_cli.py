@@ -31,7 +31,7 @@ class FakeInquirer:
     def _prompt(self, *args, **kwargs):
         return mock.Mock(execute=lambda: self.answers.pop(0))
 
-    confirm = rawlist = fuzzy = _prompt
+    confirm = rawlist = fuzzy = select = _prompt
 
 
 def save(**values):
@@ -121,7 +121,7 @@ def test_setup_saves_the_provider_and_asks_again_for_an_unsupported_city(monkeyp
     save(locale="en", city_id="5", city_name="Oualidia")
     # keep the language? no | change the provider? yes | provider | pick a city | city
     monkeypatch.setattr(
-        main, "inquirer", FakeInquirer(False, True, "aladhan", "Meknes")
+        main, "inquirer", FakeInquirer(False, True, "aladhan", "Meknes", False)
     )
 
     result = runner.invoke(main.app, ["setup"])
@@ -136,7 +136,9 @@ def test_setup_saves_the_provider_and_asks_again_for_an_unsupported_city(monkeyp
 def test_setup_keeps_a_supported_city_without_asking(monkeypatch):
     save(locale="en", city_id="99", city_name="Meknes")
     # language: no | provider: yes -> aladhan | change the city: no
-    monkeypatch.setattr(main, "inquirer", FakeInquirer(False, True, "aladhan", False))
+    monkeypatch.setattr(
+        main, "inquirer", FakeInquirer(False, True, "aladhan", False, False)
+    )
 
     result = runner.invoke(main.app, ["setup"])
 
@@ -148,13 +150,34 @@ def test_setup_keeps_a_supported_city_without_asking(monkeypatch):
 def test_setup_changes_the_language_and_translates_the_saved_city(monkeypatch):
     save(locale="en", city_id="99", city_name="Meknes")
     # change the language: yes -> fr | change the provider: no | change the city: no
-    monkeypatch.setattr(main, "inquirer", FakeInquirer(True, "fr", False, False))
+    monkeypatch.setattr(main, "inquirer", FakeInquirer(True, "fr", False, False, False))
 
     result = runner.invoke(main.app, ["setup"])
 
     assert result.exit_code == 0
     assert settings.config.get(settings.SECTION_NAME, "locale") == "fr"
     assert settings.config.get(settings.SECTION_NAME, "city_name") == "Meknès"
+
+
+def test_setup_enables_then_disables_the_past_prayer_display(monkeypatch):
+    save(locale="en", city_id="99", city_name="Meknes")
+    # language: no | provider: no | city: no | past prayer: yes -> 7 minutes
+    monkeypatch.setattr(main, "inquirer", FakeInquirer(False, False, False, True, 7))
+    runner.invoke(main.app, ["setup"])
+    assert settings.get_past_prayer_minutes() == 7
+    assert "past_prayer_minutes = 7" in settings.CONFIG_FILE.read_text()
+
+    # ... then past prayer: yes -> disabled (None)
+    monkeypatch.setattr(main, "inquirer", FakeInquirer(False, False, False, True, None))
+    runner.invoke(main.app, ["setup"])
+    assert settings.get_past_prayer_minutes() is None
+    assert "past_prayer_minutes" not in settings.CONFIG_FILE.read_text()
+
+
+def test_config_shows_the_past_prayer_setting():
+    save(city_id="99", city_name="Meknes", past_prayer_minutes="5")
+
+    assert "5 minute(s)" in runner.invoke(main.app, ["config"]).output
 
 
 def pypi_response(latest):

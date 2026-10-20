@@ -56,8 +56,8 @@ This will display the list of available commands and their descriptions.
 
 - `prayertime next`: Show the remaining time until the next prayer.
 - `prayertime today`: Display today's prayer times for the configured city.
-- `prayertime config`: Display the current configuration (city, language and provider).
-- `prayertime setup`: Configure the preferred city, language and provider.
+- `prayertime config`: Display the current configuration (city, language, provider and past prayer display).
+- `prayertime setup`: Configure the preferred city, language, provider and past prayer display.
 - `prayertime help`: Show the help message.
 
 > Note: the default command is `next`.
@@ -68,6 +68,19 @@ The first time you run the application, it will prompt you to select a city (**e
 settings will be saved for future use.
 
 You can change the _**city**_, the **_language_** or the **_provider_** anytime using the `setup` command.
+
+### Past prayer display
+
+By default, `prayertime next` only shows the upcoming prayer. You can also have it remind you of a prayer that has just
+passed, for a number of minutes **between 1 and 20**:
+
+```
+  Al-Asr was 3 minute(s) ago
+  Al-Maghrib at 17:47 => 2 hour(s) and 24 minute(s) left
+```
+
+It is **disabled by default**. Enable, change or disable it with `prayertime setup`, or by editing the
+`past_prayer_minutes` entry of the config file (remove it to disable the feature).
 
 ### Providers
 

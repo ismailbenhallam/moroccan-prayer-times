@@ -9,7 +9,7 @@ from beautifultable import BeautifulTable, Style
 from rich import print
 
 from ..i18n import _
-from ..settings import TIMES_CACHE_FOLDER
+from ..settings import TIMES_CACHE_FOLDER, get_past_prayer_minutes
 
 
 class PrayerTimesProvider(ABC):
@@ -102,6 +102,25 @@ class PrayerTimesProvider(ABC):
             table.rows.append([time, label])
         print(table)
 
+    @staticmethod
+    def _recently_passed(times: list[str], now: datetime) -> str | None:
+        """Message about the prayer that passed less than the configured window ago"""
+        window = get_past_prayer_minutes()
+        if window is None:
+            return None
+
+        now_minutes = now.hour * 60 + now.minute
+        for index in reversed(range(len(times))):
+            hour, minute = map(int, times[index].split(":"))
+            elapsed = now_minutes - (hour * 60 + minute)
+            if 0 < elapsed <= window:
+                return _(
+                    "success.prayer_passed",
+                    prayer=_(f"prayers_by_index._{index}"),
+                    minutes=elapsed,
+                )
+        return None
+
     def next(self, city_id: int) -> None:
         """Display the time remaining until the next prayer"""
         prayer_times = self.get_prayer_times(city_id)
@@ -121,9 +140,13 @@ class PrayerTimesProvider(ABC):
             None,
         )
 
+        passed = self._recently_passed(times, now)
+
         if next_index is not None and times[next_index] == now.strftime("%H:%M"):
             prayer = _(f"prayers_by_index._{next_index}")
             print()
+            if passed:
+                print(" ", passed)
             print(
                 f' => [dark_orange bold]{_("success.next_prayer_now", prayer=prayer)}'
                 "[/dark_orange bold]"
@@ -148,6 +171,8 @@ class PrayerTimesProvider(ABC):
         else:
             path = "success.next_prayer_in"
         print()
+        if passed:
+            print(" ", passed)
         print(
             " ",
             _(

@@ -7,6 +7,8 @@ fr:
     _4: Al-Maghrib
     _5: Al-Ishaa
   info:
+    past_prayer_saved_is: "Prière passée affichée pendant : [cornflower_blue]{minutes} minute(s)[/cornflower_blue]"
+    past_prayer_disabled_is: "Affichage de la prière passée : [cornflower_blue]désactivé[/cornflower_blue]"
     new_version_is_out: La version {version} est sortie 🎉
 
       Il est temps de se mettre à jour 😎
@@ -14,6 +16,7 @@ fr:
     city_saved_is: "La ville enregistrée: [cornflower_blue]{city}[cornflower_blue]"
     provider_saved_is: "Source utilisée: [cornflower_blue]{provider}[/cornflower_blue]"
   success:
+    prayer_passed: "{prayer} il y a {minutes} minute(s)"
     city_saved: Ville enregistrée
     config_saved: Vos préférences ont été sauvegardées
     next_prayer_in: "{prayer} à {at} => {hours} heure(s) et {minutes} minute(s) restante(s)"
@@ -21,6 +24,9 @@ fr:
     next_prayer_in_minutes: "{prayer} à {at} => {minutes} minutes(s) restante(s)"
     next_prayer_now: "{prayer} maintenant!"
   prompts:
+    choose_past_prayer_minutes: 'Pendant combien de temps afficher une prière passée avec "next" ?'
+    past_prayer_disabled: 'Désactivé'
+    past_prayer_minutes: '{minutes} minute(s)'
     choose_city_now_and_reuse_it: Voulez-vous choisir votre ville et la sauvegarder pour une utilisation ultérieure ?
     choose_city: Veuillez selectionner une ville
     choose_locale: Veuillez selectionner votre langue

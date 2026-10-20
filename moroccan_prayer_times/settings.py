@@ -11,6 +11,8 @@ SECTION_NAME = "DEFAULT"
 DEFAULT_LOCALE = "en"
 DEFAULT_PROVIDER = "habous"
 PROVIDER_ENV_VAR = "PRAYERTIME_PROVIDER"
+PAST_PRAYER_KEY = "past_prayer_minutes"
+PAST_PRAYER_RANGE = range(1, 21)
 
 config = configparser.ConfigParser()
 config.read(CONFIG_FILE, encoding="utf-8")
@@ -37,3 +39,12 @@ def get_provider_name() -> str:
     return (
         os.environ.get(PROVIDER_ENV_VAR) or get_saved_provider() or DEFAULT_PROVIDER
     ).lower()
+
+
+def get_past_prayer_minutes() -> int | None:
+    """How long (in minutes) a passed prayer is still displayed by `next`, None if disabled"""
+    try:
+        minutes = int(config.get(SECTION_NAME, PAST_PRAYER_KEY, fallback=""))
+    except ValueError:
+        return None
+    return minutes if minutes in PAST_PRAYER_RANGE else None

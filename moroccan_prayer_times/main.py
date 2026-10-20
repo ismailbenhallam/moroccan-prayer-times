@@ -7,6 +7,7 @@ import requests
 import typer
 import urllib3
 from InquirerPy import inquirer
+from InquirerPy.base.control import Choice
 from packaging import version
 from rich import print
 from rich.console import Console
@@ -21,10 +22,13 @@ from .providers import (
     get_provider,
 )
 from .settings import (
+    PAST_PRAYER_KEY,
+    PAST_PRAYER_RANGE,
     SECTION_NAME,
     config,
     flush,
     get_locale,
+    get_past_prayer_minutes,
     get_provider_name,
 )
 
@@ -105,6 +109,28 @@ def _prompt_user_for_provider() -> str:
     ).execute()
 
 
+def _past_prayer_info() -> str:
+    minutes = get_past_prayer_minutes()
+    if minutes is None:
+        return _("info.past_prayer_disabled_is")
+    return _("info.past_prayer_saved_is", minutes=minutes)
+
+
+def _prompt_user_for_past_prayer_minutes() -> int | None:
+    """Prompt for the number of minutes (None = disabled)"""
+    choices = [Choice(None, _("prompts.past_prayer_disabled"))] + [
+        Choice(minutes, _("prompts.past_prayer_minutes", minutes=minutes))
+        for minutes in PAST_PRAYER_RANGE
+    ]
+    return inquirer.select(
+        message=_("prompts.choose_past_prayer_minutes"),
+        choices=choices,
+        default=get_past_prayer_minutes(),
+        qmark="",
+        amark="",
+    ).execute()
+
+
 def _city_from_cache_or_prompt_then_save() -> dict[str, str]:
     """Get city from the config file. If it's not found, then prompt the user to choose a one"""
     city_id = config.get(SECTION_NAME, "city_id", fallback=None)
@@ -144,6 +170,7 @@ def get_config():
     print("=> ", _("info.language_saved_is"))
     print("=> ", _("info.city_saved_is", city=city_saved))
     print("=> ", _("info.provider_saved_is", provider=get_provider_name()))
+    print("=> ", _past_prayer_info())
 
 
 @app.command(
@@ -202,6 +229,18 @@ def setup():
         city_id, city_name = _prompt_user_for_city(_current_provider().get_cities())
         config.set(SECTION_NAME, "city_id", str(city_id))
         config.set(SECTION_NAME, "city_name", city_name)
+        something_changed = True
+
+    print()
+    print(_past_prayer_info())
+    if inquirer.confirm(
+        _("prompts.want_to_change_this_param"), default=False, qmark="", amark=""
+    ).execute():
+        minutes = _prompt_user_for_past_prayer_minutes()
+        if minutes is None:
+            config.remove_option(SECTION_NAME, PAST_PRAYER_KEY)
+        else:
+            config.set(SECTION_NAME, PAST_PRAYER_KEY, str(minutes))
         something_changed = True
 
     if something_changed:

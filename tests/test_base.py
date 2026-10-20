@@ -3,6 +3,7 @@ import json
 import pytest
 from conftest import TIMES
 
+from moroccan_prayer_times import settings
 from moroccan_prayer_times.providers import base
 from moroccan_prayer_times.providers.base import PrayerTimesProvider
 
@@ -39,6 +40,37 @@ def test_next(freeze_time, capsys, now, expected):
     FakeProvider().next(1)
 
     assert expected in capsys.readouterr().out
+
+
+@pytest.mark.parametrize(
+    "setting, now, shown",
+    [
+        ("5", "15:22", "Al-Asr was 5 minute(s) ago"),
+        ("5", "15:23", None),
+        ("20", "15:37", "Al-Asr was 20 minute(s) ago"),
+        ("20", "15:38", None),
+        ("5", "15:17", None),  # it is the prayer time itself
+        ("5", "19:03", "Al-Ishaa was 2 minute(s) ago"),
+        ("5", "12:14", "Al-Dhuhr was 2 minute(s) ago"),
+        (None, "15:20", None),  # disabled
+        ("0", "15:20", None),  # out of range
+        ("21", "15:20", None),
+        ("abc", "15:20", None),
+    ],
+)
+def test_next_shows_a_recently_passed_prayer(freeze_time, capsys, setting, now, shown):
+    if setting is not None:
+        settings.config.set(settings.SECTION_NAME, "past_prayer_minutes", setting)
+    freeze_time(now)
+
+    FakeProvider().next(1)
+
+    out = capsys.readouterr().out
+    assert ("ago" in out) is (shown is not None)
+    if shown:
+        assert shown in out
+        # the upcoming prayer is still displayed
+        assert "left" in out or "now!" in out
 
 
 @pytest.mark.parametrize(
