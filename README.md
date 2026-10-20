@@ -116,7 +116,7 @@ class MyProvider(PrayerTimesProvider):
                 "Asr": "15:17", "Maghrib": "17:47", "Isha": "19:01"}
 ```
 
-Inside this package, put the class in a new module of `moroccan_prayer_times/providers/` (like `aladhan.py`): `@register` is enough, the modules of that folder are discovered automatically.
+Inside this package, put the class in a new module of `moroccan_prayer_times/providers/` named like the provider (e.g. `aladhan.py` for `aladhan`) and decorate it with `@register`: it is found automatically, and only imported when it is selected.
 
 From an external package, declare it as an entry point instead and it will be discovered automatically:
 

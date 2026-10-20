@@ -1,3 +1,6 @@
+import subprocess
+import sys
+from pathlib import Path
 from unittest import mock
 
 import pytest
@@ -71,3 +74,24 @@ def test_aladhan_only_offers_verified_cities():
     with mock.patch("requests.get") as get:
         assert provider.fetch_prayer_times(5) is None
     get.assert_not_called()
+
+
+def test_only_the_requested_provider_is_imported():
+    code = (
+        "import sys\n"
+        "from moroccan_prayer_times.providers import get_provider\n"
+        "get_provider('habous')\n"
+        "assert 'moroccan_prayer_times.providers.habous' in sys.modules\n"
+        "assert 'moroccan_prayer_times.providers.aladhan' not in sys.modules\n"
+    )
+    # The package changes the working directory on import, so the root is given explicitly
+    root = Path(__file__).resolve().parents[1]
+    subprocess.run([sys.executable, "-c", code], check=True, cwd=root)
+
+
+@pytest.mark.parametrize("name", providers._builtin_names())
+def test_builtin_module_name_matches_provider_name(name):
+    provider = providers.get_provider(name)
+
+    assert provider.name == name
+    assert isinstance(provider, PrayerTimesProvider)

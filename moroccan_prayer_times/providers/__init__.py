@@ -1,12 +1,15 @@
 """Prayer times providers registry.
 
+Providers are loaded lazily: listing them imports nothing, and only the selected one is
+imported when it is requested.
+
 Adding a provider:
   1. Subclass `PrayerTimesProvider` (see `base.py`) and set its `name`.
-  2. Register it, either
-     - inside this package: decorate it with `@register` in a new module here, it is
-       discovered automatically, or
+  2. Make it discoverable, either
+     - inside this package: put it in a new module named like the provider (`<name>.py`)
+       and decorate it with `@register`, or
      - from an external package, through the `moroccan_prayer_times.providers`
-       entry point group (value: "module:ClassName").
+       entry point group (entry point name = provider name, value: "module:ClassName").
 """
 
 import importlib
@@ -18,7 +21,6 @@ from .base import PrayerTimesProvider
 ENTRY_POINT_GROUP = "moroccan_prayer_times.providers"
 
 _registry: dict[str, type[PrayerTimesProvider]] = {}
-_plugins_loaded = False
 
 
 class UnknownProviderError(ValueError):
@@ -31,38 +33,29 @@ def register(provider_class: type[PrayerTimesProvider]) -> type[PrayerTimesProvi
     return provider_class
 
 
-def _load_providers():
-    global _plugins_loaded
-    if _plugins_loaded:
-        return
-    _plugins_loaded = True
+def _builtin_names() -> set[str]:
+    """Providers shipped in this package, found without importing them"""
+    return {m.name for m in pkgutil.iter_modules(__path__) if m.name != "base"}
 
-    # Importing each module of this package registers its providers (see @register)
-    for module in pkgutil.iter_modules(__path__):
-        if module.name == "base":
-            continue
-        try:
-            importlib.import_module(f"{__name__}.{module.name}")
-        except Exception:
-            # A broken provider must not break the CLI
-            pass
 
-    for entry_point in entry_points(group=ENTRY_POINT_GROUP):
-        try:
-            register(entry_point.load())
-        except Exception:
-            # A broken third-party plugin must not break the CLI
-            pass
+def _plugins() -> dict:
+    """External providers declared as entry points, found without importing them"""
+    return {ep.name.lower(): ep for ep in entry_points(group=ENTRY_POINT_GROUP)}
 
 
 def available_providers() -> list[str]:
-    _load_providers()
-    return sorted(_registry)
+    return sorted(_builtin_names() | set(_plugins()) | set(_registry))
 
 
 def get_provider(name: str) -> PrayerTimesProvider:
-    _load_providers()
+    """Instantiate a provider, importing only the module that defines it"""
+    name = name.lower()
+    if name not in _registry:
+        if name in _builtin_names():
+            importlib.import_module(f"{__name__}.{name}")  # @register runs here
+        elif name in (plugins := _plugins()):
+            register(plugins[name].load())
     try:
-        return _registry[name.lower()]()
+        return _registry[name]()
     except KeyError:
         raise UnknownProviderError(name) from None
