@@ -40,6 +40,7 @@ ar:
     city_not_saved: معلومات المدينة غير موجودة!
     city_not_available: "المدينة المحفوظة غير متوفرة مع هذا المصدر، يرجى اختيار مدينة أخرى"
   errors:
+    check_city_hint: "تحقق من أن مدينتك لا تزال متاحة، أو شغّل `prayertime setup` لاختيار مدينة أخرى."
     retrieving_data_failed: فشل في الحصول على البيانات.
     unknown_provider: "المصدر '{provider}' غير معروف. المصادر المتاحة: {available}"
     loading_cities_failed: خطأ أثناء محاولة تحميل المدن. الرجاء إعادة المحاولة لاحقاً

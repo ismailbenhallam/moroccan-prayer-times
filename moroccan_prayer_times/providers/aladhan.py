@@ -37,6 +37,9 @@ class AladhanProvider(PrayerTimesProvider):
             if city_id in SUPPORTED_CITY_IDS
         }
 
+    def supports_city(self, city_id: int) -> bool:
+        return city_id in SUPPORTED_CITY_IDS
+
     def fetch_prayer_times(self, city_id: int) -> dict[str, str] | None:
         city = english_city_names().get(city_id)
         if city is None or city_id not in SUPPORTED_CITY_IDS:

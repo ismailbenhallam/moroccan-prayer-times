@@ -38,6 +38,7 @@ en:
     city_not_saved: City information not found!
     city_not_available: "The saved city is not available with this provider, please choose another one"
   errors:
+    check_city_hint: "Check that your city is still available, or run `prayertime setup` to pick another one."
     retrieving_data_failed: Failed to retrieve data.
     unknown_provider: "Unknown provider '{provider}'. Available providers: {available}"
     loading_cities_failed: Error while trying to load cities. Please retry later

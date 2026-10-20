@@ -50,6 +50,11 @@ def _current_provider() -> PrayerTimesProvider:
         raise typer.Exit(code=1)
 
 
+def _city_label(city_id: int, fallback: str) -> str:
+    label = _(f"cities._{city_id}")
+    return fallback if label.startswith("missing translation") else label
+
+
 def _prompt_user_for_city(city_options: dict[int, str] | None) -> tuple[int, str]:
     """Prompt the user to choose a city"""
     if city_options is None:
@@ -59,7 +64,8 @@ def _prompt_user_for_city(city_options: dict[int, str] | None) -> tuple[int, str
         raise typer.Exit(code=1)
 
     # Translate this list
-    translated = {id: _(f"cities._{id}") for id in city_options}
+    # (cities the site added after the translations were bundled keep the site's name)
+    translated = {id: _city_label(id, name) for id, name in city_options.items()}
 
     city_name = inquirer.fuzzy(
         message=_("prompts.choose_city"),
@@ -103,8 +109,12 @@ def _city_from_cache_or_prompt_then_save() -> dict[str, str]:
     """Get city from the config file. If it's not found, then prompt the user to choose a one"""
     city_id = config.get(SECTION_NAME, "city_id", fallback=None)
     city_name = config.get(SECTION_NAME, "city_name", fallback=None)
-    if city_id is None or city_name is None:
-        print(f"[bold dark_orange]{_('warnings.city_not_saved')}[/bold dark_orange]")
+    unsupported = city_id is not None and not _current_provider().supports_city(
+        int(city_id)
+    )
+    if city_id is None or city_name is None or unsupported:
+        warning = "city_not_available" if unsupported else "city_not_saved"
+        print(f"[bold dark_orange]{_(f'warnings.{warning}')}[/bold dark_orange]")
 
         answer = inquirer.confirm(
             _("prompts.choose_city_now_and_reuse_it"), default=True, qmark="", amark=""

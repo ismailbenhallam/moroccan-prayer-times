@@ -99,6 +99,17 @@ def test_failures_are_not_cached():
     assert not base.TIMES_CACHE_FOLDER.exists()
 
 
+@pytest.mark.parametrize(
+    "times",
+    [{}, {"a": "05:03"}, {k: "soon" for k in TIMES}],
+)
+def test_partial_or_garbled_pages_are_not_cached(times):
+    provider = FakeProvider(times=times)
+
+    assert provider.get_prayer_times(1) is None
+    assert not base.TIMES_CACHE_FOLDER.exists()
+
+
 def test_corrupt_cache_is_ignored():
     provider = FakeProvider()
     provider.get_prayer_times(1)

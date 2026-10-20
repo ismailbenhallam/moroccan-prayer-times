@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
 from typing import ClassVar
@@ -34,6 +35,10 @@ class PrayerTimesProvider(ABC):
         as "HH:MM" strings.
         """
 
+    def supports_city(self, city_id: int) -> bool:
+        """Whether the city can be served, without any network call when possible"""
+        return True
+
     def get_prayer_times(self, city_id: int) -> dict[str, str] | None:
         """Same as `fetch_prayer_times`, but cached for the day"""
         cache_file = (
@@ -46,9 +51,19 @@ class PrayerTimesProvider(ABC):
             pass
 
         prayer_times = self.fetch_prayer_times(city_id)
-        if prayer_times:
-            self._save_cache(cache_file, prayer_times)
+        if not self._is_complete(prayer_times):
+            return None
+        self._save_cache(cache_file, prayer_times)
         return prayer_times
+
+    @staticmethod
+    def _is_complete(prayer_times: dict[str, str] | None) -> bool:
+        """Guards the cache (and the rendering) against partial or garbled pages"""
+        return (
+            prayer_times is not None
+            and len(prayer_times) == 6
+            and all(re.fullmatch(r"\d{1,2}:\d{2}", t) for t in prayer_times.values())
+        )
 
     @staticmethod
     def _save_cache(cache_file, prayer_times: dict[str, str]):
@@ -67,6 +82,7 @@ class PrayerTimesProvider(ABC):
         prayer_times = self.get_prayer_times(city_id)
         if not prayer_times:
             print(_("errors.retrieving_data_failed"))
+            print(_("errors.check_city_hint"))
             return
 
         now = datetime.now()
@@ -91,6 +107,7 @@ class PrayerTimesProvider(ABC):
         prayer_times = self.get_prayer_times(city_id)
         if not prayer_times:
             print(_("errors.retrieving_data_failed"))
+            print(_("errors.check_city_hint"))
             return
 
         now = datetime.now()

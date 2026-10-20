@@ -1,6 +1,7 @@
 from unittest import mock
 
 import pytest
+import requests
 from conftest import TIMES
 from typer.testing import CliRunner
 
@@ -95,6 +96,24 @@ def test_missing_city_is_prompted_then_saved(monkeypatch):
     assert result.exit_code == 0
     assert settings.config.get(settings.SECTION_NAME, "city_id") == "99"
     assert "19:01" in result.output
+
+
+def test_saved_city_unsupported_by_the_provider_is_asked_again(monkeypatch):
+    monkeypatch.setenv(settings.PROVIDER_ENV_VAR, "aladhan")
+    settings.config.set(settings.SECTION_NAME, "city_id", "999")
+    settings.config.set(settings.SECTION_NAME, "city_name", "Gone")
+    monkeypatch.setattr(main, "inquirer", FakeInquirer(True, "Meknes"))
+    monkeypatch.setattr("requests.get", mock.Mock(side_effect=requests.ConnectionError))
+
+    result = runner.invoke(main.app, ["today"])
+
+    assert "not available with this provider" in result.output
+    assert settings.config.get(settings.SECTION_NAME, "city_id") == "99"
+
+
+def test_city_added_by_the_site_keeps_its_own_name():
+    assert main._city_label(99, "x") == "Meknes"
+    assert main._city_label(99999, "Nouvelle") == "Nouvelle"
 
 
 def test_setup_saves_the_provider_and_asks_again_for_an_unsupported_city(monkeypatch):

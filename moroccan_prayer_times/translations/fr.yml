@@ -38,6 +38,7 @@ fr:
     city_not_saved: Informations sur la ville non trouvées!
     city_not_available: "La ville enregistrée n'est pas disponible avec cette source, veuillez en choisir une autre"
   errors:
+    check_city_hint: "Vérifiez que votre ville est toujours disponible, ou lancez `prayertime setup` pour en choisir une autre."
     retrieving_data_failed: Échec de la récupération des données.
     loading_cities_failed: Erreur lors du chargement des villes. Veuillez réessayer plus tard
     unknown_provider: "Source '{provider}' inconnue. Sources disponibles: {available}"
