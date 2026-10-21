@@ -16,6 +16,9 @@ ar:
     city_saved_is: المدينة المحفوظة :[cornflower_blue]{city}[/cornflower_blue]ً
     provider_saved_is: "المصدر المستخدم: [cornflower_blue]{provider}[/cornflower_blue]"
   success:
+    bar_in: "{prayer} بعد {duration}"
+    bar_ago: "{prayer} منذ {minutes}د"
+    bar_now: "{prayer} الآن"
     prayer_passed: "{prayer} منذ {minutes} دقيقة"
     city_saved: تم حفظ المدينة
     config_saved: تم حفظ خياراتك
@@ -33,15 +36,19 @@ ar:
     choose_provider: "يرجى اختيار مصدر أوقات الصلاة"
     want_to_change_this_param: هل تريد تغيير هذا الإعداد؟
   commands_help:
-    default_command_note: ' "next" سيتم تنفيذ الأمر التلقائي 
-
-       لمعرفة الاستخدام الكامل "help"'
+    short: "يعرض سطرا قصيرا واحدا (مثال Al-Asr بعد 1h5m) لأشرطة الحالة والقوائم"
+    default_command_note: 'سيتم تنفيذ الأمر الافتراضي وهو "next". استعمل "--help" لرؤية الاستعمال الكامل.'
     config: عرض الإعدادات الخاصة بي
     setup: تغيير الإعدادات
     today: عرض أوقات الصلاة اليوم
     next: عرض الوقت المتبقي حتى موعد الصلاة التالية
     help: عرض هذا النص والخروج
     version: عرض الإصدار الحالي
+  commands_details:
+    next: "يعرض الوقت المتبقي للصلاة القادمة.\n\nاستعمل --short (-s) لسطر واحد بسيط مناسب لأشرطة الحالة: Al-Asr بعد 1h5m.\n\nيمكن إبقاء الصلاة التي مرّ وقتها للتو ظاهرة لبضع دقائق، انظر `prayertime setup`."
+    today: "يعرض أوقات الصلاة اليوم للمدينة المختارة مع إبراز الصلاة القادمة."
+    setup: "اختر بشكل تفاعلي اللغة والمدينة والمصدر ومدة بقاء الصلاة الماضية ظاهرة في next (من 1 إلى 20 دقيقة).\n\nتُحفظ الإعدادات في {config_file}\n\nلاستعمال مصدر آخر مرة واحدة دون حفظه: PRAYERTIME_PROVIDER=aladhan prayertime today"
+    config: "يعرض الإعدادات المحفوظة (اللغة والمدينة والمصدر وعرض الصلاة الماضية) ومكان حفظها: {config_file}"
   warnings:
     city_not_saved: معلومات المدينة غير موجودة!
     city_not_available: "المدينة المحفوظة غير متوفرة مع هذا المصدر، يرجى اختيار مدينة أخرى"

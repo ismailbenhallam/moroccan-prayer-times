@@ -43,6 +43,33 @@ def test_next(freeze_time, capsys, now, expected):
 
 
 @pytest.mark.parametrize(
+    "now, expected",
+    [
+        ("18:00", "Al-Ishaa in 1h1m"),
+        ("18:31", "Al-Ishaa in 30m"),
+        ("04:03", "Al-Fajr in 1h"),
+        ("19:01", "Al-Ishaa now"),
+        ("22:00", "Al-Fajr in 7h3m"),
+    ],
+)
+def test_next_bar_prints_a_single_plain_line(freeze_time, capsys, now, expected):
+    freeze_time(now)
+
+    FakeProvider().next(1, compact=True)
+
+    assert capsys.readouterr().out == expected + "\n"
+
+
+def test_next_bar_shows_only_the_recently_passed_prayer(freeze_time, capsys):
+    settings.config.set(settings.SECTION_NAME, "past_prayer_minutes", "5")
+    freeze_time("15:20")
+
+    FakeProvider().next(1, compact=True)
+
+    assert capsys.readouterr().out == "Al-Asr 3m ago\n"
+
+
+@pytest.mark.parametrize(
     "setting, now, shown",
     [
         ("5", "15:22", "Al-Asr was 5 minute(s) ago"),

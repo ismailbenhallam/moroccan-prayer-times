@@ -1,3 +1,4 @@
+import re
 from unittest import mock
 
 import pytest
@@ -60,6 +61,35 @@ def test_commands_use_the_selected_provider(clifake, freeze_time, args):
 
     assert result.exit_code == 0
     assert "19:01" in result.output
+
+
+def test_next_short_option(clifake, freeze_time):
+    freeze_time("18:00")
+
+    result = runner.invoke(main.app, ["next", "--short"])
+    assert runner.invoke(main.app, ["next", "-s"]).output == result.output
+    result = runner.invoke(main.app, ["next", "--short"])
+
+    assert result.exit_code == 0
+    assert result.output.strip() == "Al-Ishaa in 1h1m"
+
+
+@pytest.mark.parametrize(
+    "args",
+    [["--help"], ["-h"], ["help"], ["next", "--help"], ["next", "-h"], ["setup", "-h"]],
+)
+def test_help_is_available(args):
+    result = runner.invoke(main.app, args)
+
+    assert result.exit_code == 0
+    assert "Usage" in result.output
+
+
+def test_help_lists_the_commands():
+    result = runner.invoke(main.app, ["--help"])
+
+    for word in ("setup", "today", "next", "config", "version"):
+        assert word in result.output
 
 
 def test_config_shows_the_provider(clifake):
@@ -233,3 +263,11 @@ def test_upgrade_check_runs_once_a_day():
         runner.invoke(main.app, ["version"])
 
     get.assert_not_called()
+
+
+def test_next_help_mentions_the_short_option():
+    result = runner.invoke(main.app, ["next", "--help"])
+    output = re.sub(r"\x1b\[[0-9;]*m", "", result.output)  # CI forces colors
+
+    assert "--short" in output
+    assert "-s" in output

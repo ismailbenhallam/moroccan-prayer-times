@@ -16,6 +16,9 @@ fr:
     city_saved_is: "La ville enregistrée: [cornflower_blue]{city}[cornflower_blue]"
     provider_saved_is: "Source utilisée: [cornflower_blue]{provider}[/cornflower_blue]"
   success:
+    bar_in: "{prayer} dans {duration}"
+    bar_ago: "{prayer} il y a {minutes}m"
+    bar_now: "{prayer} maintenant"
     prayer_passed: "{prayer} il y a {minutes} minute(s)"
     city_saved: Ville enregistrée
     config_saved: Vos préférences ont été sauvegardées
@@ -33,13 +36,19 @@ fr:
     choose_provider: "Veuillez sélectionner la source des horaires de prière"
     want_to_change_this_param: Voulez-vous changer ce paramètre ?
   commands_help:
-    default_command_note: 'La commande par défaut sera exécutée, à savoir "next". Utilisez "help" pour voir l''utilisation complète.'
+    short: "Affiche une seule ligne courte (ex. Al-Asr dans 1h5m), pour les barres d'état et de menu"
+    default_command_note: 'La commande par défaut sera exécutée, à savoir "next". Utilisez "--help" pour voir l''utilisation complète.'
     config: Afficher ma configuration
     setup: Changez vos préférences
     today: Affichez les heures de prière pour aujourd'hui.
     next: Affichage le temps restant jusqu'à la prochaine prière
     help: Afficher ce message et quitter
     version: Afficher la version actuelle
+  commands_details:
+    next: "Affiche le temps restant avant la prochaine prière.\n\nUtilisez --short (-s) pour une seule ligne simple, pratique pour les barres d'état : Al-Asr dans 1h5m.\n\nUne prière qui vient de passer peut rester affichée quelques minutes, voir `prayertime setup`."
+    today: "Affiche les horaires de prière du jour pour la ville configurée, la prochaine prière étant mise en évidence."
+    setup: "Choisissez interactivement la langue, la ville, le fournisseur et la durée pendant laquelle une prière passée reste affichée par next (1 à 20 minutes).\n\nLes préférences sont enregistrées dans {config_file}\n\nPour utiliser un autre fournisseur une seule fois, sans l'enregistrer : PRAYERTIME_PROVIDER=aladhan prayertime today"
+    config: "Affiche les préférences enregistrées (langue, ville, fournisseur, affichage de la prière passée) et où elles sont stockées : {config_file}"
   warnings:
     city_not_saved: Informations sur la ville non trouvées!
     city_not_available: "La ville enregistrée n'est pas disponible avec cette source, veuillez en choisir une autre"

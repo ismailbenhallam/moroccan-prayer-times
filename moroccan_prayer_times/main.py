@@ -2,7 +2,6 @@
 
 from datetime import datetime
 
-import click
 import requests
 import typer
 import urllib3
@@ -22,6 +21,7 @@ from .providers import (
     get_provider,
 )
 from .settings import (
+    CONFIG_FILE,
     PAST_PRAYER_KEY,
     PAST_PRAYER_RANGE,
     SECTION_NAME,
@@ -35,7 +35,11 @@ from .settings import (
 APP_NAME = "Prayer Times CLI"
 GLOBAL_COMMAND = "prayertime"
 
-app = typer.Typer(help=APP_NAME, add_help_option=False, add_completion=False)
+app = typer.Typer(
+    help=APP_NAME,
+    add_completion=False,
+    context_settings={"help_option_names": ["-h", "--help"]},
+)
 
 
 def _current_provider() -> PrayerTimesProvider:
@@ -172,7 +176,7 @@ def _city_from_cache_or_prompt_then_save() -> dict[str, str]:
 @app.command(
     name="config",
     short_help=_("commands_help.config"),
-    help=_("commands_help.config"),
+    help=_("commands_details.config", config_file=CONFIG_FILE),
 )
 def get_config():
     """Show the user config"""
@@ -186,7 +190,7 @@ def get_config():
 @app.command(
     name="setup",
     short_help=_("commands_help.setup"),
-    help=_("commands_help.setup"),
+    help=_("commands_details.setup", config_file=CONFIG_FILE),
 )
 def setup():
     """Change the user preferences"""
@@ -262,7 +266,7 @@ def setup():
 @app.command(
     name="today",
     short_help=_("commands_help.today"),
-    help=_("commands_help.today"),
+    help=_("commands_details.today"),
 )
 def today_prayer_times():
     """Display today's prayer times"""
@@ -273,12 +277,16 @@ def today_prayer_times():
 @app.command(
     name="next",
     short_help=_("commands_help.next"),
-    help=_("commands_help.next"),
+    help=_("commands_details.next"),
 )
-def next_prayer_time():
+def next_prayer_time(
+    short: bool = typer.Option(
+        False, "--short", "-s", help=_("commands_help.short"), show_default=False
+    ),
+):
     """Display the time remaining until the next prayer"""
     city_id = _city_from_cache_or_prompt_then_save()["city_id"]
-    _current_provider().next(city_id)
+    _current_provider().next(city_id, compact=short)
 
 
 @app.command(
@@ -307,12 +315,10 @@ def default(ctx: typer.Context):
 
     _check_for_upgrade()
 
-    _set_custom_help(ctx)
-
     # Default command is 'next'
     if ctx.invoked_subcommand is None:
         print(f'[slate_blue1]{_("commands_help.default_command_note")}[/slate_blue1]')
-        next_prayer_time()
+        next_prayer_time(short=False)
 
 
 def _create_config_file_with_default_locale():
@@ -320,16 +326,6 @@ def _create_config_file_with_default_locale():
     if config.get(SECTION_NAME, "locale", fallback=None) is None:
         config.set(SECTION_NAME, "locale", get_locale())
         flush()
-
-
-def _set_custom_help(ctx):
-    ctx.help_option_names = []  # Hide default help option
-
-    class CustomHelp(click.HelpFormatter):
-        def write_usage(self, prog: str, args: str = "", prefix=None):
-            self.buffer.append(f"Usage: {GLOBAL_COMMAND} COMMAND")
-
-    ctx.formatter_class = CustomHelp
 
 
 def _check_for_upgrade():

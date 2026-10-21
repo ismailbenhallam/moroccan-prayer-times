@@ -54,13 +54,19 @@ This will display the list of available commands and their descriptions.
 
 ### Commands
 
-- `prayertime next`: Show the remaining time until the next prayer.
+- `prayertime next`: Show the remaining time until the next prayer. Add `--short` (or `-s`) for a single short line
+  (e.g. `Al-Asr in 1h5m`), handy for status bars and menu bars (xbar, waybar, polybar...).
 - `prayertime today`: Display today's prayer times for the configured city.
 - `prayertime config`: Display the current configuration (city, language, provider and past prayer display).
 - `prayertime setup`: Configure the preferred city, language, provider and past prayer display.
-- `prayertime help`: Show the help message.
+- `prayertime help`: Show the help message (same as `prayertime --help`; every command also accepts `--help` or `-h`).
 
 > Note: the default command is `next`.
+
+```
+$ prayertime next --short
+Al-Asr in 1h5m      # or: Al-Asr in 2h / Al-Asr in 17m / Al-Asr now / Al-Asr 3m ago
+```
 
 ## Configuration
 

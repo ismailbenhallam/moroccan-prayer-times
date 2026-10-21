@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.2.0
+
+### Added
+- `prayertime next --short` prints a single short line (`Al-Asr in 1h5m`), for status bars and menu bars.
+- A standard `--help` (or `-h`) on the app and on every command (usage, options and details such as the config file location).
+  `prayertime help` still works.
+
+### Changed
+- While a passed prayer is displayed, `next` shows only that prayer, not the upcoming one.
+
 ## 2.1.1
 
 ### Added

@@ -1,3 +1,4 @@
+import builtins
 import json
 import os
 import re
@@ -105,8 +106,8 @@ class PrayerTimesProvider(ABC):
         print(table)
 
     @staticmethod
-    def _recently_passed(times: list[str], now: datetime) -> str | None:
-        """Message about the prayer that passed less than the configured window ago"""
+    def _recently_passed(times: list[str], now: datetime) -> tuple[int, int] | None:
+        """(prayer index, minutes elapsed) of a prayer that passed within the window"""
         window = get_past_prayer_minutes()
         if window is None:
             return None
@@ -116,17 +117,26 @@ class PrayerTimesProvider(ABC):
             hour, minute = map(int, times[index].split(":"))
             elapsed = now_minutes - (hour * 60 + minute)
             if 0 < elapsed <= window:
-                return _(
-                    "success.prayer_passed",
-                    prayer=_(f"prayers_by_index._{index}"),
-                    minutes=elapsed,
-                )
+                return index, elapsed
         return None
 
-    def next(self, city_id: int) -> None:
-        """Display the time remaining until the next prayer"""
+    @staticmethod
+    def _duration(hours: int, minutes: int) -> str:
+        """1h5m, 2h or 17m"""
+        return (f"{hours}h" if hours else "") + (
+            f"{minutes}m" if minutes or not hours else ""
+        )
+
+    def next(self, city_id: int, compact: bool = False) -> None:
+        """Display the time remaining until the next prayer
+
+        `compact` prints a single plain line, meant for status / menu bars.
+        """
         prayer_times = self.get_prayer_times(city_id)
         if not prayer_times:
+            if compact:
+                builtins.print(_("errors.retrieving_data_failed"))
+                return
             print(_("errors.retrieving_data_failed"))
             print(_("errors.check_city_hint"))
             return
@@ -142,17 +152,24 @@ class PrayerTimesProvider(ABC):
             None,
         )
 
-        passed = self._recently_passed(times, now)
-
         # While a passed prayer is displayed, it replaces the upcoming one
+        passed = self._recently_passed(times, now)
         if passed:
+            index, elapsed = passed
+            prayer = _(f"prayers_by_index._{index}")
+            if compact:
+                builtins.print(_("success.bar_ago", prayer=prayer, minutes=elapsed))
+                return
             print()
-            print(" ", passed)
+            print(" ", _("success.prayer_passed", prayer=prayer, minutes=elapsed))
             print()
             return
 
         if next_index is not None and times[next_index] == now.strftime("%H:%M"):
             prayer = _(f"prayers_by_index._{next_index}")
+            if compact:
+                builtins.print(_("success.bar_now", prayer=prayer))
+                return
             print()
             print(
                 f' => [dark_orange bold]{_("success.next_prayer_now", prayer=prayer)}'
@@ -170,6 +187,12 @@ class PrayerTimesProvider(ABC):
         remaining = next_time - datetime.strptime(now.strftime("%H:%M"), "%H:%M")
         hours = remaining.seconds // 3600
         minutes = (remaining.seconds // 60) % 60
+        prayer = _(f"prayers_by_index._{next_index}")
+
+        if compact:
+            duration = self._duration(hours, minutes)
+            builtins.print(_("success.bar_in", prayer=prayer, duration=duration))
+            return
 
         if hours == 0:
             path = "success.next_prayer_in_minutes"
@@ -180,12 +203,6 @@ class PrayerTimesProvider(ABC):
         print()
         print(
             " ",
-            _(
-                path,
-                prayer=_(f"prayers_by_index._{next_index}"),
-                hours=hours,
-                minutes=minutes,
-                at=times[next_index],
-            ),
+            _(path, prayer=prayer, hours=hours, minutes=minutes, at=times[next_index]),
         )
         print()

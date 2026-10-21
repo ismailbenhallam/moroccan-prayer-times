@@ -16,6 +16,9 @@ en:
     city_saved_is: "City saved: [cornflower_blue]{city}[/cornflower_blue]"
     provider_saved_is: "Provider used: [cornflower_blue]{provider}[/cornflower_blue]"
   success:
+    bar_in: "{prayer} in {duration}"
+    bar_ago: "{prayer} {minutes}m ago"
+    bar_now: "{prayer} now"
     prayer_passed: "{prayer} was {minutes} minute(s) ago"
     city_saved: City saved
     config_saved: Your preferences are saved
@@ -33,13 +36,19 @@ en:
     choose_provider: "Please choose a prayer times provider"
     want_to_change_this_param: Would you like to change this option?
   commands_help:
-    default_command_note: 'The default command will be executed, which is "next". Use "help" to see the full usage.'
+    short: "Print a single short line (e.g. Al-Asr in 1h5m), for status and menu bars"
+    default_command_note: 'The default command will be executed, which is "next". Use "--help" to see the full usage.'
     config: Show my config
     setup: Change your preferences
     today: Display today's prayer times
     next: Display the time remaining until the next prayer
     help: Show this message and exit
     version: Display the current version
+  commands_details:
+    next: "Display the time remaining until the next prayer.\n\nUse --short (-s) for a single plain line, handy for status bars: Al-Asr in 1h5m.\n\nA prayer that has just passed can be shown for a few minutes, see `prayertime setup`."
+    today: "Display today's prayer times for the configured city, the next prayer being highlighted."
+    setup: "Interactively choose the language, the city, the provider and how long a passed prayer is still shown by next (1-20 minutes).\n\nThe preferences are saved in {config_file}\n\nTo use another provider once, without saving it: PRAYERTIME_PROVIDER=aladhan prayertime today"
+    config: "Display the saved preferences (language, city, provider, past prayer display) and where they are stored: {config_file}"
   warnings:
     city_not_saved: City information not found!
     city_not_available: "The saved city is not available with this provider, please choose another one"
