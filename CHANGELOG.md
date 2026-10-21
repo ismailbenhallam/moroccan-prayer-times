@@ -12,7 +12,7 @@
 
 ### Added
 - `prayertime next` can also display a prayer that passed less than X minutes ago
-  (`Al-Asr was 3 minute(s) ago`). X is between 1 and 20, and the feature is disabled
+  (`Al-Asr was 3 minute(s) ago`), instead of the upcoming one during that period. X is between 1 and 20, and the feature is disabled
   by default. Configure it with `prayertime setup` (`past_prayer_minutes` in the config file).
 
 ## 2.0.0

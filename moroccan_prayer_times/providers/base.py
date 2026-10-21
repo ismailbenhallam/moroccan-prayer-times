@@ -144,11 +144,16 @@ class PrayerTimesProvider(ABC):
 
         passed = self._recently_passed(times, now)
 
+        # While a passed prayer is displayed, it replaces the upcoming one
+        if passed:
+            print()
+            print(" ", passed)
+            print()
+            return
+
         if next_index is not None and times[next_index] == now.strftime("%H:%M"):
             prayer = _(f"prayers_by_index._{next_index}")
             print()
-            if passed:
-                print(" ", passed)
             print(
                 f' => [dark_orange bold]{_("success.next_prayer_now", prayer=prayer)}'
                 "[/dark_orange bold]"
@@ -173,8 +178,6 @@ class PrayerTimesProvider(ABC):
         else:
             path = "success.next_prayer_in"
         print()
-        if passed:
-            print(" ", passed)
         print(
             " ",
             _(

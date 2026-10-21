@@ -69,7 +69,9 @@ def test_next_shows_a_recently_passed_prayer(freeze_time, capsys, setting, now, 
     assert ("ago" in out) is (shown is not None)
     if shown:
         assert shown in out
-        # the upcoming prayer is still displayed
+        # the upcoming prayer is not displayed during that period
+        assert "left" not in out and "now!" not in out
+    else:
         assert "left" in out or "now!" in out
 
 

@@ -53,11 +53,13 @@ def test_version():
 
 
 @pytest.mark.parametrize("args", [["today"], ["next"], []])
-def test_commands_use_the_selected_provider(clifake, args):
+def test_commands_use_the_selected_provider(clifake, freeze_time, args):
+    freeze_time("18:00")
+
     result = runner.invoke(main.app, args)
 
     assert result.exit_code == 0
-    assert "19:01" in result.output or "Al-Fajr" in result.output
+    assert "19:01" in result.output
 
 
 def test_config_shows_the_provider(clifake):

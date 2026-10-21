@@ -72,11 +72,15 @@ You can change the _**city**_, the **_language_** or the **_provider_** anytime 
 ### Past prayer display
 
 By default, `prayertime next` only shows the upcoming prayer. You can also have it remind you of a prayer that has just
-passed, for a number of minutes **between 1 and 20**:
+passed, for a number of minutes **between 1 and 20**. During that period, only the passed prayer is displayed
+(the upcoming one is not), then `next` goes back to the usual output:
 
 ```
+# 3 minutes after Al-Asr
   Al-Asr was 3 minute(s) ago
-  Al-Maghrib at 17:47 => 2 hour(s) and 24 minute(s) left
+
+# afterwards
+  Al-Maghrib at 17:47 => 2 hour(s) and 21 minute(s) left
 ```
 
 It is **disabled by default**. Enable, change or disable it with `prayertime setup`, or by editing the
